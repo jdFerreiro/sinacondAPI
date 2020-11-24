@@ -1,4 +1,9 @@
-const { create, getAll, getById, updateRec, deleteRec } = require("./userStatus.service");
+const { create, 
+    getAll, 
+    getById, 
+    updateRec, 
+    deleteRec 
+} = require("./userStatus.service");
 
 module.exports = {
     createReg: (req, res) => {

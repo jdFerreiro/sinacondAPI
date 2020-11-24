@@ -69,13 +69,96 @@ module.exports = {
             }
         );
     },
-    createCity: (data, callBack) => {
+    createProvince: (data, callBack) => {
         pool.query(
-            `INSERT INTO City (id, name, idCountry, createUserId, createdAt) VALUES (?,?,?,UTC_TIMESTAMP)`,
+            `INSERT INTO Province (id, name, idCountry, createUserId, createdAt) VALUES (?,?,?,?,UTC_TIMESTAMP)`,
             [
                 data.id,
                 data.name,
                 data.countryId,
+                data.createUserId
+            ],
+            (error, results, fields) => {
+                if (error) {
+                    return callBack('createProvince Geography service error: ' + error)
+                }
+                return callBack(null, results[0])
+            }
+        );
+    },
+    getProvinces: (id, callBack) => {
+        pool.query(
+            `SELECT * FROM province WHERE idCountry = ?`,
+            [id],
+            (error, results, fields) => {
+                if (error) {
+                    return callBack('getProvinces Geography service error: ' + error)
+                }
+ 
+                return callBack(null, results)
+            }
+        );
+    },
+    getProvinceById: (id, callBack) => {
+        pool.query(
+            `SELECT id, name, idCountry, createUserId, createdAt, updatedUserId, updateAt FROM province WHERE id = ?`,
+            [id],
+            (error, results, fields) => {
+                if (error) {
+                    return callBack('getProvinceById Geography service error: ' + error)
+                }
+                return callBack(null, results)
+            }
+        );
+    },
+    updateCityRec: (data, callBack) => {
+        pool.query(
+            `UPDATE province SET name = ?, idCountry = ?, updateAt = UTC_TIMESTAMP, updatedUserId = 1 WHERE id = ?;
+            `,
+            [
+                data.name,
+                data.countryId,
+                data.id
+            ],
+            (error, results, fields) => {
+                if (error) {
+                    return callBack('updateCityRec Geography service error: ' + error)
+                }
+                return callBack(null, results)
+            }
+        );
+    },
+    deleteProvinceByCountryRec: (id, callBack) => {
+        pool.query(
+            `DELETE FROM city WHERE idCountry = ?; DELETE FROM country WHERE id = ?;`,
+            [id],
+            (error, results, fields) => {
+                if (error) {
+                    return callBack('deleteProvinceByCountryRec Geography service error: ' + error)
+                }
+                return callBack(null, results)
+            }
+        );
+    },
+    deleteProvinceRec: (id, callBack) => {
+        pool.query(
+            `DELETE FROM province WHERE id = ?;`,
+            [id],
+            (error, results, fields) => {
+                if (error) {
+                    return callBack('deleteProvinceRec Geography service error: ' + error)
+                }
+                return callBack(null, results)
+            }
+        );
+    },
+    createCity: (data, callBack) => {
+        pool.query(
+            `INSERT INTO City (id, name, idProvince, createUserId, createdAt) VALUES (?,?,?,?,UTC_TIMESTAMP)`,
+            [
+                data.id,
+                data.name,
+                data.provinceId,
                 data.createUserId
             ],
             (error, results, fields) => {
@@ -86,10 +169,10 @@ module.exports = {
             }
         );
     },
-    getCities: callBack => {
+    getCities: (id, callBack) => {
         pool.query(
-            `SELECT * FROM city WHERE idCountry = ?`,
-            [countryId],
+            `SELECT * FROM city WHERE idProvince = ?`,
+            [id],
             (error, results, fields) => {
                 if (error) {
                     return callBack('getCities Geography service error: ' + error)
@@ -101,7 +184,7 @@ module.exports = {
     },
     getCityById: (id, callBack) => {
         pool.query(
-            `SELECT id, name, idCountry, createUserId, createdAt, updatedUserId, updateAt FROM city WHERE id = ?`,
+            `SELECT id, name, idProvince, createUserId, createdAt, updatedUserId, updateAt FROM city WHERE id = ?`,
             [id],
             (error, results, fields) => {
                 if (error) {
@@ -113,10 +196,11 @@ module.exports = {
     },
     updateCityRec: (data, callBack) => {
         pool.query(
-            `UPDATE city SET name = ?, idCountry = ?, updateAt = UTC_TIMESTAMP, updatedUserId = 1 WHERE id = ?;
+            `UPDATE city SET name = ?, idProvince = ?, updateAt = UTC_TIMESTAMP, updatedUserId = 1 WHERE id = ?;
             `,
             [
                 data.name,
+                data.idProvince,
                 data.id
             ],
             (error, results, fields) => {
@@ -127,9 +211,9 @@ module.exports = {
             }
         );
     },
-    deleteCityByCountryRec: (id, callBack) => {
+    deleteCityByProvinceRec: (id, callBack) => {
         pool.query(
-            `DELETE FROM city WHERE idCountry = ?; DELETE FROM country WHERE id = ?;`,
+            `DELETE FROM city WHERE idProvince = ?; DELETE FROM country WHERE id = ?;`,
             [id],
             (error, results, fields) => {
                 if (error) {
@@ -141,7 +225,7 @@ module.exports = {
     },
     deleteCityRec: (id, callBack) => {
         pool.query(
-            `DELETE FROM city WHERE WHERE id = ?;`,
+            `DELETE FROM city WHERE id = ?;`,
             [id],
             (error, results, fields) => {
                 if (error) {

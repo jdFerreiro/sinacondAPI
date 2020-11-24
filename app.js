@@ -5,12 +5,14 @@ const app = express();
 const userRouter = require("./api/user/user.router");
 const rolRouter = require("./api/rol/rol.router");
 const userStatusRouter = require('./api/userStatus/userStatus.router');
+const geographyRouter = require('./api/geography/geography.router');
 
 app.use(express.json());
 
 app.use("/api/user", userRouter);
 app.use("/api/rol", rolRouter);
 app.use("/api/userStatus", userStatusRouter);
+app.use("/api/geography", geographyRouter);
 
 app.get('/api', (req, res) => {
     res.json({

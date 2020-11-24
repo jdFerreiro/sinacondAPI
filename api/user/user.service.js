@@ -89,5 +89,20 @@ module.exports = {
                 return callBack(null, results)
             }
         );
+    },
+    login: (data, callBack) => {
+        pool.query(
+            `SELECT * FROM user WHERE email = ? and password = ?`,
+            [
+                data.email,
+                data.password
+            ],
+            (error, results, fields) => {
+                if (error) {
+                    return callBack('login user service error: ' + error)
+                }
+                return callBack(null, results)
+            }
+        );
     }
 };
