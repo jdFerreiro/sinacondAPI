@@ -6,7 +6,9 @@ const
         updateRec,
         deleteRec,
         updateRecStatus,
-        login
+        login,
+        menuMainOptions,
+        menuChildOptions
     } = require("./user.service");
 
 const encrypt = require("bcrypt");
@@ -129,8 +131,6 @@ module.exports = {
     },
     loginUser: (req, res) => {
         const body = req.body;
-        const salt = encrypt.genSaltSync(10);
-        body.password = encrypt.hashSync(body.password, salt);
         login(body, (err, results) => {
             if (err) {
                 return res.status(500).json({
@@ -138,22 +138,72 @@ module.exports = {
                     message: "Database error " + err
                 });
             }
-            if (!results) {
+            if (!results || !results.length > 0) {
                 return res.json({
                     success: 0,
                     message: "Correo electrónico o contraseña inválidos."
                 });
-            } else {
-                results.password = undefined;
-                const token = jwt.sign({ result: results }, "51n3c0nd831u3md3c0", {
-                    expiresIn: "1d"
+            }
+            console.log(encrypt.compare(body.password, results[0].password, (err, result) => {
+                if (result) {
+                    results.password = undefined;
+                    const token = jwt.sign({ result: results }, "51n3c0nd831u3md3c0", {
+                        expiresIn: "1d"
+                    });
+                    return res.status(200).json({
+                        success: 1,
+                        message: "login successfull",
+                        token
+                    });
+                }
+                else {
+                    return res.json({
+                        success: 0,
+                        message: "contraseña inválida."
+                    });
+                }
+            }))
+        });
+    },
+    menuUser: (req, res) => {
+        const id = req.params.id;
+        menuMainOptions(id, (err, results) => {
+            if (err) {
+                return res.status(500).json({
+                    success: 0,
+                    message: "Database error " + err
                 });
+            }
+            if (!results || !results.length > 0) {
+                return res.json({
+                    success: 0,
+                    message: "Id usuario inválido."
+                });
+            }
+            if (results) {
                 return res.status(200).json({
                     success: 1,
-                    message: "login successfull",
-                    token
+                    message: "menuUser data send",
+                    results
                 });
             }
         });
+    },
+    menuChildUser: (req, res) => {
+        const body = req.body;
+        menuChildOptions(body, (err, results) => {
+            if (err) {
+                return res.status(500).json({
+                    success: 0,
+                    message: "Database error " + err
+                });
+            }
+            return res.status(200).json({
+                success: 1,
+                message: "menuChildUser data send",
+                results
+            });
+        });
     }
+
 };

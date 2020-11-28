@@ -92,17 +92,48 @@ module.exports = {
     },
     login: (data, callBack) => {
         pool.query(
-            `SELECT * FROM user WHERE email = ? and password = ?`,
+            `SELECT * FROM user WHERE email = ?`,
+            data.email,
+            (error, results, fields) => {
+                if (error) {
+                    return callBack('login user service error: ' + error);
+                }
+                return callBack(null, results);
+            }
+        );
+    },
+    menuMainOptions: (id, callback) => {
+        pool.query(
+            `SELECT m.id, m.name, m.route
+            FROM usermenu um
+            JOIN menu m ON m.id = um.idmenu
+            WHERE m.idParent is null AND um.iduser = 1;`,
+            [id],
+            (error, results, fields) => {
+                if (error) {
+                    return callback('login user service error: ' + error);
+                }
+                return callback(null, results);
+            }
+        );
+    },
+    menuChildOptions: (data, callback) => {
+        pool.query(
+            `SELECT m.id, m.name, m.route
+            FROM usermenu um
+            JOIN menu m ON m.id = um.idmenu
+            WHERE m.idParent = ? AND um.iduser = ?;`,
             [
-                data.email,
-                data.password
+                data.idParent,
+                data.idUser
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('login user service error: ' + error)
+                    return callback('login user service error: ' + error);
                 }
-                return callBack(null, results)
+                return callback(null, results);
             }
         );
     }
+
 };
