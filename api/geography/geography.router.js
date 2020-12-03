@@ -23,7 +23,7 @@ const { checkToken } = require("../../auth/token_validation");
 router.post("/country", checkToken, createCountryReg);
 router.get("/country", checkToken, getAllCountriesData);
 router.get("/country/:id", checkToken, getCountryReg);
-router.patch("/country/", checkToken, updateCountryReg);
+router.patch("/country", checkToken, updateCountryReg);
 router.delete("/country/:id", checkToken, deleteCountryReg);
 
 router.post("/province", checkToken, createProvinceReg);

@@ -1,13 +1,12 @@
 const
     {
-        menuMainOptions,
-        menuChildOptions
+        menuUser
     } = require("./menu.service");
 
 module.exports = {
-    menuUser: (req, res) => {
+    menuData: (req, res) => {
         const id = req.params.id;
-        menuMainOptions(id, (err, results) => {
+        menuUser(id, (err, results) => {
             if (err) {
                 return res.status(500).json({
                     success: 0,
@@ -27,22 +26,6 @@ module.exports = {
                     results
                 });
             }
-        });
-    },
-    menuChildUser: (req, res) => {
-        const body = req.body;
-        menuChildOptions(body, (err, results) => {
-            if (err) {
-                return res.status(500).json({
-                    success: 0,
-                    message: "Database error " + err
-                });
-            }
-            return res.status(200).json({
-                success: 1,
-                message: "menuChildUser data send",
-                results
-            });
         });
     }
 

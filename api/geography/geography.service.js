@@ -59,7 +59,7 @@ module.exports = {
     },
     deleteCountryRec: (id, callBack) => {
         pool.query(
-            `DELETE FROM city WHERE idCountry = ?; DELETE FROM country WHERE id = ?;`,
+            `DELETE FROM country WHERE id = ?;`,
             [id],
             (error, results, fields) => {
                 if (error) {
