@@ -30,7 +30,7 @@ module.exports = {
     },
     getAll: callBack => {
         pool.query(
-            `SELECT * FROM company`,
+            `SELECT * FROM company Order By Name`,
             [],
             (error, results, fields) => {
                 if (error) {
@@ -89,6 +89,46 @@ module.exports = {
                     return callBack('deletecompany service error: ' + error)
                 }
                 return callBack(null, results)
+            }
+        );
+    },
+    getChilds: (id, callBack) => {
+        pool.query(
+            `SELECT * FROM company WHERE idParent = ?`,
+            [id],
+            (error, results, fields) => {
+                if (error) {
+                    return callBack('getChilds service error: ' + error)
+                }
+                return callBack(null, results)
+            }
+        );
+    },
+    createChild: (data, callBack) => {
+        pool.query(
+            `INSERT INTO company (id, idParent, name, address, idCountry, idProvince, idCity, zipCode, email, idStatus, 
+                                  lastStatusUpdate, hasMultipleAdministration, createUserId, createdAt)
+                            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, utc_timestamp, ?, ?, utc_timestamp)`,
+            [
+                data.id,
+                data.name,
+                data.idParent,
+                data.address,
+                data.idCountry,
+                data.idProvince,
+                data.idCity,
+                data.zipCode,
+                data.email,
+                data.idStatus,
+                data.lastStatusUpdate,
+                data.MultipleAdministration,
+                data.idUser
+            ],
+            (error, results, fields) => {
+                if (error) {
+                    return callBack('createcompanychild service error: ' + error)
+                }
+                return callBack(null, results[0])
             }
         );
     }

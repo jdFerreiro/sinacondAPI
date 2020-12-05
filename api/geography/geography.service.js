@@ -3,10 +3,10 @@ const pool = require("../../config/database");
 module.exports = {
     createCountry: (data, callBack) => {
         pool.query(
-            `INSERT INTO country (id, name, createUserId, createdAt) VALUES (?,?,1,UTC_TIMESTAMP)`,
+            `INSERT INTO country (name, createUserId, createdAt) VALUES (?,?,UTC_TIMESTAMP)`,
             [
-                data.id,
-                data.name
+                data.name,
+                data.userId
             ],
             (error, results, fields) => {
                 if (error) {
@@ -18,7 +18,7 @@ module.exports = {
     },
     getCountries: callBack => {
         pool.query(
-            `SELECT * FROM country`,
+            `SELECT * FROM country ORDER BY name;`,
             [],
             (error, results, fields) => {
                 if (error) {
@@ -43,11 +43,12 @@ module.exports = {
     },
     updateCountryRec: (data, callBack) => {
         pool.query(
-            `UPDATE country SET name = ?, updateAt = UTC_TIMESTAMP, updatedUserId = 1 WHERE id = ?;
+            `UPDATE country SET name = ?, updateAt = UTC_TIMESTAMP, updatedUserId = ? WHERE id = ?;
             `,
             [
                 data.name,
-                data.id
+                data.userId,
+                data.id,
             ],
             (error, results, fields) => {
                 if (error) {
@@ -71,12 +72,11 @@ module.exports = {
     },
     createProvince: (data, callBack) => {
         pool.query(
-            `INSERT INTO Province (id, name, idCountry, createUserId, createdAt) VALUES (?,?,?,?,UTC_TIMESTAMP)`,
+            `INSERT INTO Province (name, idCountry, createUserId, createdAt) VALUES (?,?,?,UTC_TIMESTAMP)`,
             [
-                data.id,
                 data.name,
                 data.countryId,
-                data.createUserId
+                data.userId
             ],
             (error, results, fields) => {
                 if (error) {
@@ -88,7 +88,7 @@ module.exports = {
     },
     getProvinces: (id, callBack) => {
         pool.query(
-            `SELECT * FROM province WHERE idCountry = ?`,
+            `SELECT * FROM province WHERE idCountry = ? ORDER BY name;`,
             [id],
             (error, results, fields) => {
                 if (error) {
@@ -111,13 +111,14 @@ module.exports = {
             }
         );
     },
-    updateCityRec: (data, callBack) => {
+    updateProvinceRec: (data, callBack) => {
         pool.query(
-            `UPDATE province SET name = ?, idCountry = ?, updateAt = UTC_TIMESTAMP, updatedUserId = 1 WHERE id = ?;
+            `UPDATE province SET name = ?, idCountry = ?, updateAt = UTC_TIMESTAMP, updatedUserId = ? WHERE id = ?;
             `,
             [
                 data.name,
                 data.countryId,
+                data.userId,
                 data.id
             ],
             (error, results, fields) => {
@@ -154,12 +155,11 @@ module.exports = {
     },
     createCity: (data, callBack) => {
         pool.query(
-            `INSERT INTO City (id, name, idProvince, createUserId, createdAt) VALUES (?,?,?,?,UTC_TIMESTAMP)`,
+            `INSERT INTO City (name, idProvince, createUserId, createdAt) VALUES (?,?,?,UTC_TIMESTAMP)`,
             [
-                data.id,
                 data.name,
                 data.provinceId,
-                data.createUserId
+                data.userId,
             ],
             (error, results, fields) => {
                 if (error) {
@@ -171,7 +171,7 @@ module.exports = {
     },
     getCities: (id, callBack) => {
         pool.query(
-            `SELECT * FROM city WHERE idProvince = ?`,
+            `SELECT * FROM city WHERE idProvince = ? ORDER BY name;`,
             [id],
             (error, results, fields) => {
                 if (error) {
@@ -196,11 +196,12 @@ module.exports = {
     },
     updateCityRec: (data, callBack) => {
         pool.query(
-            `UPDATE city SET name = ?, idProvince = ?, updateAt = UTC_TIMESTAMP, updatedUserId = 1 WHERE id = ?;
+            `UPDATE city SET name = ?, idProvince = ?, updateAt = UTC_TIMESTAMP, updatedUserId = ? WHERE id = ?;
             `,
             [
                 data.name,
                 data.idProvince,
+                data.userId,
                 data.id
             ],
             (error, results, fields) => {

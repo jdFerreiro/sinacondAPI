@@ -2,7 +2,9 @@ const { create,
     getAll, 
     getById, 
     updateRec, 
-    deleteRec 
+    deleteRec, 
+    getChilds,
+    createChild
 } = require("./company.service");
 
 module.exports = {
@@ -91,6 +93,44 @@ module.exports = {
             return res.status(200).json({
                 success: 1,
                 message: "Registro eliminado correctamente"
+            });
+        });
+    },
+    createChildReg: (req, res) => {
+        const body = req.body;
+        createChild(body, (err, results) => {
+            if (err) {
+                return res.status(500).json({
+                    success: 0,
+                    message: "Database connection error"
+                });
+            }
+
+            return res.status(200).json({
+                success: 1,
+                data: results
+            });
+        });
+    },
+    getChildsReg: (req, res) => {
+        const id = req.params.id;
+        getChilds(id, (err, results) => {
+            if (err) {
+                console.log('service error: ' + err);
+                return res.status(500).json({
+                    success: 0,
+                    message: "Database connection error"
+                });
+            }
+            if (!results) {
+                return res.status(404).json({
+                    success: 0,
+                    message: "No se encontraron registros"
+                });
+            }
+            return res.status(200).json({
+                success: 1,
+                message: "Registros obtenidos satisfactoriamente"
             });
         });
     }

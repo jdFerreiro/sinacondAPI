@@ -22,7 +22,7 @@ module.exports = {
     },
     getAll: callBack => {
         pool.query(
-            `SELECT * FROM user`,
+            `SELECT * FROM user ORDER BY name;`,
             [],
             (error, results, fields) => {
                 if (error) {

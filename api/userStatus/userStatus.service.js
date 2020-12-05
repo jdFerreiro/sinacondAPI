@@ -18,7 +18,7 @@ module.exports = {
     },
     getAll: callBack => {
         pool.query(
-            `SELECT * FROM userstatus`,
+            `SELECT * FROM userstatus ORDER BY name;`,
             [],
             (error, results, fields) => {
                 if (error) {
