@@ -8,25 +8,31 @@ app.use(cors());
 
 
 const userRouter = require("./api/user/user.router");
-app.use("/api/user", userRouter);
-
 const rolRouter = require("./api/rol/rol.router");
-app.use("/api/rol", rolRouter);
-
 const userStatusRouter = require('./api/userStatus/userStatus.router');
-app.use("/api/userStatus", userStatusRouter);
-
 const geographyRouter = require('./api/geography/geography.router');
-app.use("/api/geography", geographyRouter);
-
 const companyStatusRouter = require('./api/companyStatus/companyStatus.router');
-app.use("/api/companyStatus", companyStatusRouter);
-
 const companyRouter = require('./api/company/company.router');
-app.use("/api/company", companyRouter);
+const residentTypeRouter = require("./api/residentType/residentType.router");
+const unitTypeRouter = require("./api/unitType/unitType.router");
+const unitStatusRouter = require("./api/unitStatus/unitStatus.router");
+const unitRouter = require("./api/unit/unit.router");
+const menuRouter  = require("./api/menu/menu.router");
+const unitConditionRouter = require("./api/unitCondition/unitCondition.router");
+// const Router = require("./api");
 
-const menuRouter = require("./api/menu/menu.router");
+app.use("/api/geography", geographyRouter);
+app.use("/api/userStatus", userStatusRouter);
+app.use("/api/user", userRouter);
+app.use("/api/rol", rolRouter);
+app.use("/api/companyStatus", companyStatusRouter);
+app.use("/api/company", companyRouter);
 app.use("/api/menu", menuRouter);
+app.use("/api/residentType", residentTypeRouter);
+app.use("/api/unitType", unitTypeRouter);
+app.use("/api/unitStatus", unitStatusRouter);
+app.use("/api/unit", unitRouter);
+app.use("/api/unitCondition", unitConditionRouter);
 
 app.get('/api', (req, res) => {
     res.json({
