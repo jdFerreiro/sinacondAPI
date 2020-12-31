@@ -6,7 +6,6 @@ const cors = require('cors');
 app.use(express.json());
 app.use(cors());
 
-
 const userRouter = require("./api/user/user.router");
 const rolRouter = require("./api/rol/rol.router");
 const userStatusRouter = require('./api/userStatus/userStatus.router');
@@ -19,7 +18,9 @@ const unitStatusRouter = require("./api/unitStatus/unitStatus.router");
 const unitRouter = require("./api/unit/unit.router");
 const menuRouter  = require("./api/menu/menu.router");
 const unitConditionRouter = require("./api/unitCondition/unitCondition.router");
-// const Router = require("./api");
+const residentRouter = require("./api/resident/resident.router")
+const divisaRouter = require("./api/divisas/divisas.router")
+const facturaRouter = require("./api/facturas/factura.router")
 
 app.use("/api/geography", geographyRouter);
 app.use("/api/userStatus", userStatusRouter);
@@ -33,6 +34,9 @@ app.use("/api/unitType", unitTypeRouter);
 app.use("/api/unitStatus", unitStatusRouter);
 app.use("/api/unit", unitRouter);
 app.use("/api/unitCondition", unitConditionRouter);
+app.use("/api/resident", residentRouter);
+app.use("/api/divisas", divisaRouter);
+app.use("/api/factura", facturaRouter)
 
 app.get('/api', (req, res) => {
     res.json({

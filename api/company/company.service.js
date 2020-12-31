@@ -3,11 +3,13 @@ const pool = require("../../config/database");
 module.exports = {
     create: (data, callBack) => {
         pool.query(
-            `INSERT INTO company (id, name, address, idCountry, idProvince, idCity, zipCode, email, idStatus, 
-                                  lastStatusUpdate, hasMultipleAdministration, createUserId, createdAt)
-                            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, utc_timestamp, ?, ?, utc_timestamp)`,
+            `INSERT INTO company (id, idParent, name, address, idCountry, idProvince, idCity, zipCode, email, idStatus, 
+                                  lastStatusUpdate, isResidence, createUserId, createdAt, tipoIdentificacion, 
+                                  nroIdentificacion, telefonoPrincipal, telefonoSecundario)
+                            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, utc_timestamp, ?, ?, utc_timestamp, ?, ?, ?, ?)`,
             [
                 data.id,
+                data.parentId,
                 data.name,
                 data.address,
                 data.idCountry,
@@ -16,9 +18,12 @@ module.exports = {
                 data.zipCode,
                 data.email,
                 data.idStatus,
-                data.lastStatusUpdate,
-                data.MultipleAdministration,
-                data.idUser
+                data.isResidence,
+                data.idUser,
+                data.tipoIdentificacion,
+                data.nroIdentificacion,
+                data.telefonoPrincipal,
+                data.telefonoSecundario
             ],
             (error, results, fields) => {
                 if (error) {
@@ -30,7 +35,11 @@ module.exports = {
     },
     getAll: callBack => {
         pool.query(
-            `SELECT * FROM company Order By Name`,
+            `SELECT *,
+                (SELECT COUNT(*) FROM company cmpChld WHERE cmpChld.idParent = cmp.id) buildings
+            FROM sinacond.company cmp 
+            WHERE idParent is null 
+            ORDER BY Name`,
             [],
             (error, results, fields) => {
                 if (error) {
@@ -55,21 +64,25 @@ module.exports = {
     },
     updateRec: (data, callBack) => {
         pool.query(
-            `UPDATE company SET name = ?, address = ?, idCountry = ?, idProvince = ?, idCity = ?, zipCode = ?, email = ?, 
-                                idStatus = ?, lastStatusUpdate = ?, hasMultipleAdministration = ?, updatedUserId = ?
-                                updateAt = utc_timestamp WHERE id = ?;`,
+            `UPDATE company SET name = ?, idParent = ?, address = ?, idCountry = ?, idProvince = ?, idCity = ?, zipCode = ?, email = ?, 
+                                isResidence = ?, updatedUserId = ?, updateAt = utc_timestamp, tipoIdentificacion = ?, 
+                                nroIdentificacion = ?, telefonoPrincipal = ?, telefonoSecundario = ? 
+            WHERE id = ?;`,
             [
                 data.name,
+                data.parentId,
                 data.address,
                 data.idCountry,
                 data.idProvince,
                 data.idCity,
                 data.zipCode,
                 data.email,
-                data.idStatus,
-                data.lastStatusUpdate,
-                data.MultipleAdministration,
+                data.isResidence,
                 data.idUser,
+                data.tipoIdentificacion,
+                data.nroIdentificacion,
+                data.telefonoPrincipal,
+                data.telefonoSecundario,
                 data.id
             ],
             (error, results, fields) => {
@@ -92,44 +105,38 @@ module.exports = {
             }
         );
     },
-    getChilds: (id, callBack) => {
+    getResidences: callBack => {
         pool.query(
-            `SELECT * FROM company WHERE idParent = ?`,
-            [id],
+            `SELECT *,
+                (SELECT COUNT(*) FROM unit WHERE unit.companyId = cmp.id) units
+            FROM sinacond.company cmp
+             WHERE isResidence is not null 
+             ORDER BY Name`,
+            [],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('getChilds service error: ' + error)
+                    return callBack('getcompany service error: ' + error)
                 }
+
                 return callBack(null, results)
             }
         );
     },
-    createChild: (data, callBack) => {
+    getAdmins: callBack => {
         pool.query(
-            `INSERT INTO company (id, idParent, name, address, idCountry, idProvince, idCity, zipCode, email, idStatus, 
-                                  lastStatusUpdate, hasMultipleAdministration, createUserId, createdAt)
-                            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, utc_timestamp, ?, ?, utc_timestamp)`,
-            [
-                data.id,
-                data.name,
-                data.idParent,
-                data.address,
-                data.idCountry,
-                data.idProvince,
-                data.idCity,
-                data.zipCode,
-                data.email,
-                data.idStatus,
-                data.lastStatusUpdate,
-                data.MultipleAdministration,
-                data.idUser
-            ],
+            `SELECT * ,
+                (SELECT COUNT(*) FROM company cmpChld WHERE cmpChld.idParent = cmp.id) buildings
+             FROM sinacond.company cmp 
+             WHERE isResidence is null 
+             ORDER BY Name`,
+            [],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('createcompanychild service error: ' + error)
+                    return callBack('getcompany service error: ' + error)
                 }
-                return callBack(null, results[0])
+
+                return callBack(null, results)
             }
         );
-    }
+    },
 };

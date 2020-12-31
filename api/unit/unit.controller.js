@@ -1,4 +1,4 @@
-const { create, getAll, getById, updateRec, deleteRec } = require("./unit.service");
+const { create, getAll, getById, updateRec, deleteRec, getByUser } = require("./unit.service");
 
 module.exports = {
     createReg: (req, res) => {
@@ -7,7 +7,8 @@ module.exports = {
             if (err) {
                 return res.status(500).json({
                     success: 0,
-                    message: "Database connection error"
+                    message: "Database connection error",
+                    error: err
                 });
             }
 
@@ -18,11 +19,13 @@ module.exports = {
         });
     },
     getAllReg: (req, res) => {
-        getAll((err, results) => {
+        const id = req.params.id;
+        getAll(id, (err, results) => {
             if (err) {
                 return res.status(500).json({
                     success: 0,
-                    message: "Database connection error"
+                    message: "Database connection error",
+                    error: err
                 });
             }
 
@@ -51,6 +54,25 @@ module.exports = {
             });
         });
     },
+    getRegByUser: (req, res) => {
+        const id = req.params.id;
+        getByUser(id, (err, results) => {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            if (!results || results.length == 0) {
+                return res.status(404).json({
+                    success: 0,
+                    message: "No se encontró el registro indicado"
+                });
+            }
+            return res.status(200).json({
+                success: 1,
+                data: results
+            });
+        });
+    },
     updateReg: (req, res) => {
         const body = req.body;
         updateRec(body, (err, results) => {
@@ -58,7 +80,8 @@ module.exports = {
                 console.log('service error: ' + err);
                 return res.status(500).json({
                     success: 0,
-                    message: "Database connection error"
+                    message: "Database connection error",
+                    error: err
                 });
             }
             return res.status(200).json({
@@ -74,7 +97,8 @@ module.exports = {
                 console.log('service error: ' + err);
                 return res.status(500).json({
                     success: 0,
-                    message: "Database connection error"
+                    message: "Database connection error",
+                    error: err
                 });
             }
             return res.status(200).json({
@@ -90,7 +114,8 @@ module.exports = {
                 console.log('service error: ' + err);
                 return res.status(500).json({
                     success: 0,
-                    message: "Database connection error"
+                    message: "Database connection error",
+                    error: err
                 });
             }
             if (!results) {

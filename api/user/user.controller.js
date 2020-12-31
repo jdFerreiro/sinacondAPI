@@ -7,9 +7,7 @@ const
         deleteRec,
         updateRecStatus,
         login,
-        menuMainOptions,
-        menuChildOptions
-    } = require("./user.service");
+} = require("./user.service");
 
 const encrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");

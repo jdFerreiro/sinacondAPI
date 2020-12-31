@@ -3,15 +3,16 @@ const pool = require("../../config/database");
 module.exports = {
     create: (data, callBack) => {
         pool.query(
-            `INSERT INTO unit (companyId, name, alicuota, unitTypeId, unitConditionId, statusId, lastStatusDate, createUserId, createdAt) 
-                        VALUES (?,?,?,?,?,1,UTC_TIMESTAMP,?,UTC_TIMESTAMP)`,
+            `INSERT INTO unit (companyId, name, alicuota, unitTypeId, unitConditionId, statusId, lastStatusDate, createUserId, createdAt, boughtDate) 
+                        VALUES (?, ?, ?, ?, ?, 1, UTC_TIMESTAMP, ?, UTC_TIMESTAMP, ?)`,
             [
-                data.companyid,
+                data.companyId,
                 data.name,
                 data.alicuota,
                 data.unitTypeId,
                 data.unitConditionId,
-                data.userId
+                data.userId,
+                data.boughtDate
             ],
             (error, results, fields) => {
                 if (error) {
@@ -21,10 +22,14 @@ module.exports = {
             }
         );
     },
-    getAll: (data, callBack) => {
+    getAll: (id, callBack) => {
         pool.query(
-            `SELECT * FROM unit Where companyId = ? ORDER BY name;`,
-            [ data.companyId ],
+            `SELECT *,
+                (SELECT COUNT(*) FROM unitresident WHERE unitresident.idUnit = unit.id) residents
+            FROM unit 
+            WHERE companyId = ? 
+            ORDER BY name;`,
+            [id],
             (error, results, fields) => {
                 if (error) {
                     return callBack('get units service error: ' + error)
@@ -46,6 +51,23 @@ module.exports = {
             }
         );
     },
+    getByUser: (id, callBack) => {
+        pool.query(
+            `SELECT u.id, concat(c.name, ' - unidad: ', u.name) unit, unr.idrol, c.id companyId
+             FROM userresident ur
+                JOIN unitresident unr ON unr.idresident = ur.idresident
+                JOIN unit u on u.id = unr.idunit
+                JOIN company c ON c.id = u.companyId
+             WHERE iduser = ?`,
+            [id],
+            (error, results, fields) => {
+                if (error) {
+                    return callBack('get unit by id service error: ' + error)
+                }
+                return callBack(null, results)
+            }
+        );
+    },
     updateRec: (data, callBack) => {
         pool.query(
             `UPDATE unit 
@@ -56,14 +78,17 @@ module.exports = {
                     , unitConditionId = ?
                     , updatedAt = UTC_TIMESTAMP
                     , updatedUserId = ? 
+                    , boughtDate = ?
                 WHERE id = ?;
             `,
             [
                 data.companyId,
                 data.name,
+                data.alicuota,
                 data.unitTypeId,
                 data.unitConditionId,
                 data.userId,
+                data.boughtDate,
                 data.id
             ],
             (error, results, fields) => {

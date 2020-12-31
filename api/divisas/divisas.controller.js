@@ -1,11 +1,4 @@
-const { create,
-    getAll, 
-    getById, 
-    updateRec, 
-    deleteRec, 
-    getResidences,
-    getAdmins
-} = require("./company.service");
+const { create, getAll, getBydate, updateRec, deleteRec } = require("./divisas.service");
 
 module.exports = {
     createReg: (req, res) => {
@@ -41,9 +34,9 @@ module.exports = {
             });
         });
     },
-    getRegById: (req, res) => {
-        const id = req.params.id;
-        getById(id, (err, results) => {
+    getRegByDate: (req, res) => {
+        const body = req.body;
+        getBydate(body, (err, results) => {
             if (err) {
                 console.log(err);
                 return;
@@ -78,8 +71,8 @@ module.exports = {
         });
     },
     deleteReg: (req, res) => {
-        const id = req.params.id;
-        deleteRec(id, (err, results) => {
+        const body = req.body;
+        deleteRec(body, (err, results) => {
             if (err) {
                 console.log('service error: ' + err);
                 return res.status(500).json({

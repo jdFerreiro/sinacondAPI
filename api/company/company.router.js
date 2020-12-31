@@ -3,19 +3,19 @@ const { createReg,
     getRegById, 
     updateReg, 
     deleteReg,
-    getChildsReg,
-    createChildReg,
+    getResidencesReg,
+    getAdminsReg,
 } = require("./company.controller");
 const router = require("express").Router();
 const { checkToken } = require("../../auth/token_validation");
 
 router.post("/", checkToken, createReg);
 router.get("/", checkToken, getAllReg);
-router.get("/:id", checkToken, getRegById);
+router.get("/item/:id", checkToken, getRegById);
 router.patch("/", checkToken, updateReg);
-router.delete("/:id", checkToken, deleteReg);
+router.delete("/item/:id", checkToken, deleteReg);
 
-router.post("/child", checkToken, createChildReg);
-router.get("/child", checkToken, getChildsReg);
+router.get("/residences", checkToken, getResidencesReg);
+router.get("/admins", checkToken, getAdminsReg);
 
 module.exports = router;

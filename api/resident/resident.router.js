@@ -1,10 +1,11 @@
-const { createReg, getAllReg, getRegById, updateReg, deleteReg } = require("./resident.controller");
+const { getAllReg, getRegById, updateReg, deleteReg, getRegByEmail, getEmailsReg } = require("./resident.controller");
 const router = require("express").Router();
 const { checkToken } = require("../../auth/token_validation");
 
-router.post("/", checkToken, createReg);
-router.get("/", checkToken, getAllReg);
-router.get("/:id", checkToken, getRegById);
+router.get("/byUnit/:id", checkToken, getAllReg);
+router.post("/item/", checkToken, getRegById);
+router.post("/byEmail/", checkToken, getRegByEmail);
+router.get("/emails/", checkToken, getEmailsReg);
 router.patch("/", checkToken, updateReg);
 router.delete("/:id", checkToken, deleteReg);
 

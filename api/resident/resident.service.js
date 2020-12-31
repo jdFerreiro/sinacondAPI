@@ -1,47 +1,89 @@
 const pool = require("../../config/database");
 
 module.exports = {
-    create: (data, callBack) => {
-        pool.query(
-            `INSERT INTO resident (unitId, name, identificacion, fechacompra, residentTypeId, email, nroTelefonoPrincipal, nroTelefonoSecundario, createUserId, createdAt) 
-                        VALUES (?,?,?,?,?,?,?,?,?,UTC_TIMESTAMP)`,
+    updateRec: (data, callBack) => {
+        pool.query(`CALL updateResident(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [
-                data.unitId,
+                data.id,
                 data.name,
                 data.identificacion,
-                data.fechaCompra,
-                data.residentTypeId,
-                data.residentTypeId,
+                data.residenttypeid,
                 data.email,
-                data.nroTelefonoPrincipal,
-                data.nroTelefonoSecundario,
-                data.userId
+                data.nrotelefonoprincipal,
+                data.nrotelefonosecundario,
+                data.userId,
+                data.unitId,
+                data.password,
             ],
             (error, results, fields) => {
                 if (error) {
                     return callBack('create resident service error: ' + error)
-                }
-                return callBack(null, results[0])
-            }
-        );
-    },
-    getAll: (data, callBack) => {
-        pool.query(
-            `SELECT * FROM resident WHERE unitId = ? ORDER BY name;`,
-            [ data.unitId ],
-            (error, results, fields) => {
-                if (error) {
-                    return callBack('get units service error: ' + error)
                 }
 
                 return callBack(null, results)
             }
         );
     },
-    getById: (id, callBack) => {
+    getEmails: callBack => {
         pool.query(
-            `SELECT * FROM resident WHERE id = ?`,
+            `SELECT DISTINCT email
+             FROM resident 
+             ORDER BY email;`,
+            [],
+            (error, results, fields) => {
+                if (error) {
+                    return callBack('get emails service error: ' + error)
+                }
+
+                return callBack(null, results)
+            }
+        );
+    },
+    getByEmail: (data, callBack) => {
+        pool.query(
+            `SELECT r.*, ur.residenttypeid
+            FROM resident r
+                LEFT JOIN unitresident ur on ur.idresident = r.id AND ur.idunit = ?
+            WHERE email = ?`,
+            [
+                data.unitId,
+                data.email
+            ],
+            (error, results, fields) => {
+                if (error) {
+                    return callBack('get resident by email service error: ' + error)
+                }
+                return callBack(null, results)
+            }
+        );
+    },
+    getAll: (id, callBack) => {
+        pool.query(
+            `SELECT r.*, rt.name residentType
+             FROM unitresident ur
+                JOIN resident r ON r.id = ur.idResident
+                LEFT JOIN unitresidenttype rt ON rt.id = ur.residentTypeId
+            WHERE idunit = ?;`,
             [id],
+            (error, results, fields) => {
+                if (error) {
+                    return callBack('get resident by unitId service error: ' + error)
+                }
+
+                return callBack(null, results)
+            }
+        );
+    },
+    getById: (data, callBack) => {
+        pool.query(
+            `SELECT r.*, ur.residenttypeid
+             FROM resident r
+                LEFT JOIN unitresident ur on ur.idresident = r.id AND ur.idunit = ?
+             WHERE id = ?`,
+            [
+                data.unitId,
+                data.id
+            ],
             (error, results, fields) => {
                 if (error) {
                     return callBack('get resident by id service error: ' + error)
@@ -50,40 +92,9 @@ module.exports = {
             }
         );
     },
-    updateRec: (data, callBack) => {
-        pool.query(
-            `UPDATE resident 
-                SET unitId = ?
-                    , name = ?
-                    , identificacion = ?
-                    , fechaCompra = ?
-                    , residentTypeId = ?
-                    , email = ?
-                    , nroTelefonoPrincipal = ?
-                    , nroTelefonoSecundario = ?
-                    , updatedAt = UTC_TIMESTAMP
-                    , updatedUserId = ? 
-                WHERE id = ?;
-            `,
-            [
-                data.unitId,
-                data.name,
-                data.unitTypeId,
-                data.unitConditionId,
-                data.userId,
-                data.id
-            ],
-            (error, results, fields) => {
-                if (error) {
-                    return callBack('update resident service error: ' + error)
-                }
-                return callBack(null, results)
-            }
-        );
-    },
     deleteRec: (id, callBack) => {
         pool.query(
-            `DELETE FROM resident WHERE id = ?`,
+            `DELETE FROM unitResident WHERE idResident = ?;`,
             [id],
             (error, results, fields) => {
                 if (error) {
