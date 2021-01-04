@@ -17,7 +17,7 @@ module.exports = {
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('create resident service error: ' + error)
+                    return callBack('update resident service error: ' + error)
                 }
 
                 return callBack(null, results)
@@ -94,11 +94,11 @@ module.exports = {
     },
     deleteRec: (id, callBack) => {
         pool.query(
-            `DELETE FROM unitResident WHERE idResident = ?;`,
+            `CALL deleteResident(?);`,
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('deleteunit service error: ' + error)
+                    return callBack('delete resident service error: ' + error)
                 }
                 return callBack(null, results)
             }

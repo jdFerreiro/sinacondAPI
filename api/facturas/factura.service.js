@@ -16,19 +16,26 @@ module.exports = {
                 if (error) {
                     return callBack('create factura service error: ' + error)
                 }
-                return callBack(null, results[0])
+                return callBack(null, results)
             }
         );
     },
-    getFacturas: (id, callBack) => {
+    getFacturas: (data, callBack) => {
         pool.query( 
-            `SELECT f.*, SUM(IFNULL(fdME.precioTotal,0)) montoME, SUM(IFNULL(fdLocal.precioTotal,0)) montoLocal, fs.name status
+            `SELECT f.*, SUM(IFNULL(fdME.precioTotal,0)) montoME, SUM(IFNULL(fdLocal.precioTotal,0)) montoLocal, 
+                fs.name status, p.name proveedor
+                , (SELECT COUNT(*) FROM facturaaprobacion fp WHERE fp.idFactura = f.id) aprobaciones
+                , (SELECT COUNT(*) FROM facturaaprobacion fa WHERE fa.idFactura = f.id AND fa.idUnit = ?) aprobado
             FROM factura f
+                INNER JOIN facturaStatus fs ON fs.id = f.idStatus
+                INNER JOIN proveedor p ON p.id = f.idproveedor
                 LEFT JOIN facturadetalle fdME ON fdME.idFactura = f.id AND fdME.dolares = 1
                 LEFT JOIN facturadetalle fdLocal ON fdLocal.idFactura = f.id AND fdLocal.dolares = 0
-                INNER JOIN facturaStatus fs ON fs.id = f.idStatus
             WHERE idcompany = ?`,
-            [id],
+            [
+                data.idU,
+                data.idC
+            ],
             (error, results, fields) => {
                 if (error) {
                     return callBack('get facturas service error: ' + error)
@@ -106,7 +113,7 @@ module.exports = {
                 if (error) {
                     return callBack('create detalle factura service error: ' + error)
                 }
-                return callBack(null, results[0])
+                return callBack(null, results)
             }
         );
     },
@@ -177,26 +184,6 @@ module.exports = {
             }
         );
     },
-    chequearAprobacion: (data, callBack) => {
-        pool.query(
-            `SELECT * FROM facturaaprobacion WHERE idfactura = ? AND idUnit = ?;`,
-            [
-                data.idFactura,
-                data.idUnit,
-            ],
-            (error, results, fields) => {
-                if (error) {
-                    return callBack('delete detalle factura service error: ' + error)
-                }
-
-                if (results.length > 0) {
-                    return callBack(null, true);
-                } else {
-                    return callBack(null, false);
-                }
-            }
-        );
-    },
     createAprobacion: (data, callBack) => {
         pool.query(
             `INSERT INTO facturaaprobacion (idfactura, idUnit, fechaaprobacion, createUserId, createdAt)
@@ -210,7 +197,7 @@ module.exports = {
                 if (error) {
                     return callBack('Aprobar factura service error: ' + error)
                 }
-                return callBack(null, results[0])
+                return callBack(null, results)
             }
         );
     },

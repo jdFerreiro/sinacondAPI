@@ -14,9 +14,9 @@ module.exports = {
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('createRol service error: ' + error)
+                    return callBack('create user service error: ' + error)
                 }
-                return callBack(null, results[0])
+                return callBack(null, results)
             }
         );
     },
@@ -72,7 +72,7 @@ module.exports = {
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('updateRecStatus user service error: ' + error)
+                    return callBack('update status user service error: ' + error)
                 }
                 return callBack(null, results)
             }
@@ -84,7 +84,7 @@ module.exports = {
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('deleteRec user service error: ' + error)
+                    return callBack('delete user service error: ' + error)
                 }
                 return callBack(null, results)
             }

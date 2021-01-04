@@ -11,9 +11,9 @@ module.exports = {
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('createRol service error: ' + error)
+                    return callBack('create menu service error: ' + error)
                 }
-                return callBack(null, results[0])
+                return callBack(null, results)
             }
         );
     },
@@ -26,7 +26,7 @@ module.exports = {
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callback('login user service error: ' + error);
+                    return callback('get menu by user service error: ' + error);
                 }
                 return callback(null, results);
             }
@@ -41,7 +41,7 @@ module.exports = {
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callback('login user service error: ' + error);
+                    return callback('get menu by rol service error: ' + error);
                 }
                 return callback(null, results);
             }
@@ -59,7 +59,7 @@ module.exports = {
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callback('login user service error: ' + error);
+                    return callback('delete menu service error: ' + error);
                 }
                 return callback(null, results);
             }

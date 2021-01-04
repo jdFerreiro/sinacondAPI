@@ -18,7 +18,7 @@ module.exports = {
                 if (error) {
                     return callBack('create unit service error: ' + error)
                 }
-                return callBack(null, results[0])
+                return callBack(null, results)
             }
         );
     },
@@ -127,7 +127,7 @@ module.exports = {
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('deleteunit service error: ' + error)
+                    return callBack('delete unit service error: ' + error)
                 }
                 return callBack(null, results)
             }

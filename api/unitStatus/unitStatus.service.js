@@ -12,7 +12,7 @@ module.exports = {
                 if (error) {
                     return callBack('create unit status service error: ' + error)
                 }
-                return callBack(null, results[0])
+                return callBack(null, results)
             }
         );
     },

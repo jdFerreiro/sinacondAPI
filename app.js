@@ -21,6 +21,7 @@ const unitConditionRouter = require("./api/unitCondition/unitCondition.router");
 const residentRouter = require("./api/resident/resident.router")
 const divisaRouter = require("./api/divisas/divisas.router")
 const facturaRouter = require("./api/facturas/factura.router")
+const providerRouter = require("./api/provider/provider.router")
 
 app.use("/api/geography", geographyRouter);
 app.use("/api/userStatus", userStatusRouter);
@@ -36,7 +37,8 @@ app.use("/api/unit", unitRouter);
 app.use("/api/unitCondition", unitConditionRouter);
 app.use("/api/resident", residentRouter);
 app.use("/api/divisas", divisaRouter);
-app.use("/api/factura", facturaRouter)
+app.use("/api/factura", facturaRouter);
+app.use("/api/provider", providerRouter);
 
 app.get('/api', (req, res) => {
     res.json({

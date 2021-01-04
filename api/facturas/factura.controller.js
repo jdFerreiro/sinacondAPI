@@ -34,8 +34,10 @@ module.exports = {
         });
     },
     getFacturasReg: (req, res) => {
-        const id = req.params.id;
-        getFacturas(id, (err, results) => {
+        const idC = req.params.idC;
+        const idU = req.params.idU;
+        
+        getFacturas({idC, idU}, (err, results) => {
             if (err) {
                 return res.status(500).json({
                     success: 0,

@@ -10,9 +10,9 @@ module.exports = {
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('createCountry Geography service error: ' + error)
+                    return callBack('create country service error: ' + error)
                 }
-                return callBack(null, results[0])
+                return callBack(null, results)
             }
         );
     },
@@ -22,7 +22,7 @@ module.exports = {
             [],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('getCountries Geography service error: ' + error)
+                    return callBack('get countries service error: ' + error)
                 }
  
                 return callBack(null, results)
@@ -35,7 +35,7 @@ module.exports = {
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('getCountryById Geography service error: ' + error)
+                    return callBack('get country by id service error: ' + error)
                 }
                 return callBack(null, results)
             }
@@ -52,7 +52,7 @@ module.exports = {
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('updateCountryRec Geography service error: ' + error)
+                    return callBack('update country service error: ' + error)
                 }
                 return callBack(null, results)
             }
@@ -64,7 +64,7 @@ module.exports = {
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('deleteCountryRec Geography service error: ' + error)
+                    return callBack('delete country service error: ' + error)
                 }
                 return callBack(null, results)
             }
@@ -80,9 +80,9 @@ module.exports = {
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('createProvince Geography service error: ' + error)
+                    return callBack('create province service error: ' + error)
                 }
-                return callBack(null, results[0])
+                return callBack(null, results)
             }
         );
     },
@@ -92,7 +92,7 @@ module.exports = {
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('getProvinces Geography service error: ' + error)
+                    return callBack('get province service error: ' + error)
                 }
  
                 return callBack(null, results)
@@ -105,7 +105,7 @@ module.exports = {
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('getProvinceById Geography service error: ' + error)
+                    return callBack('get province by id service error: ' + error)
                 }
                 return callBack(null, results)
             }
@@ -123,7 +123,7 @@ module.exports = {
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('updateCityRec Geography service error: ' + error)
+                    return callBack('update province service error: ' + error)
                 }
                 return callBack(null, results)
             }
@@ -135,7 +135,7 @@ module.exports = {
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('deleteProvinceByCountryRec Geography service error: ' + error)
+                    return callBack('delete province by country service error: ' + error)
                 }
                 return callBack(null, results)
             }
@@ -147,7 +147,7 @@ module.exports = {
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('deleteProvinceRec Geography service error: ' + error)
+                    return callBack('delete province service error: ' + error)
                 }
                 return callBack(null, results)
             }
@@ -163,9 +163,9 @@ module.exports = {
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('createCity Geography service error: ' + error)
+                    return callBack('create city service error: ' + error)
                 }
-                return callBack(null, results[0])
+                return callBack(null, results)
             }
         );
     },
@@ -175,7 +175,7 @@ module.exports = {
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('getCities Geography service error: ' + error)
+                    return callBack('get city service error: ' + error)
                 }
  
                 return callBack(null, results)
@@ -188,7 +188,7 @@ module.exports = {
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('getCityById Geography service error: ' + error)
+                    return callBack('get city by id service error: ' + error)
                 }
                 return callBack(null, results)
             }
@@ -206,7 +206,7 @@ module.exports = {
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('updateCountryRec Geography service error: ' + error)
+                    return callBack('update city service error: ' + error)
                 }
                 return callBack(null, results)
             }
@@ -218,7 +218,7 @@ module.exports = {
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('deleteCountryRec Geography service error: ' + error)
+                    return callBack('delete city by province service error: ' + error)
                 }
                 return callBack(null, results)
             }
@@ -230,7 +230,7 @@ module.exports = {
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('deleteCityRec Geography service error: ' + error)
+                    return callBack('delete city service error: ' + error)
                 }
                 return callBack(null, results)
             }

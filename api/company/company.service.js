@@ -27,9 +27,9 @@ module.exports = {
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('createcompany service error: ' + error)
+                    return callBack('create company service error: ' + error)
                 }
-                return callBack(null, results[0])
+                return callBack(null, results)
             }
         );
     },
@@ -43,7 +43,7 @@ module.exports = {
             [],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('getcompany service error: ' + error)
+                    return callBack('get company service error: ' + error)
                 }
 
                 return callBack(null, results)
@@ -56,7 +56,7 @@ module.exports = {
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('getcompanyById service error: ' + error)
+                    return callBack('get companyById service error: ' + error)
                 }
                 return callBack(null, results)
             }
@@ -87,7 +87,7 @@ module.exports = {
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('updatecompany service error: ' + error)
+                    return callBack('update company service error: ' + error)
                 }
                 return callBack(null, results)
             }
@@ -99,7 +99,7 @@ module.exports = {
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('deletecompany service error: ' + error)
+                    return callBack('delete company service error: ' + error)
                 }
                 return callBack(null, results)
             }
@@ -115,7 +115,7 @@ module.exports = {
             [],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('getcompany service error: ' + error)
+                    return callBack('get residences service error: ' + error)
                 }
 
                 return callBack(null, results)
@@ -132,7 +132,7 @@ module.exports = {
             [],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('getcompany service error: ' + error)
+                    return callBack('get admins service error: ' + error)
                 }
 
                 return callBack(null, results)

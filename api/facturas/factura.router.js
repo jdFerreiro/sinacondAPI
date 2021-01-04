@@ -18,7 +18,7 @@ const {
 } = require("./factura.controller");
 
 router.post("/", checkToken, createFacturaReg);
-router.get("/byCompany/:id", checkToken, getFacturasReg);
+router.get("/company/:idC/unit/:idU", checkToken, getFacturasReg);
 router.get("/:id", checkToken, getFacturaReg);
 router.patch("/", checkToken, updateFacturaReg);
 router.delete("/:id", checkToken, deleteFacturaReg);
@@ -27,7 +27,7 @@ router.get("/detalleByFactura/:id", checkToken, getDetalleReg);
 router.get("/detalle/:id", checkToken, getDetalleByIdReg);
 router.patch("/detalle/", checkToken, updateDetalleReg);
 router.delete("/detalle/:id", checkToken, deleteDetalleReg);
-router.get("/data/approve", checkToken, checkAprobacion)
+router.post("/data/approve/unit", checkToken, checkAprobacion)
 router.post("/data/approve", checkToken, createAprobacion)
 router.delete("/data/approve", checkToken, deleteAprobacion)
 

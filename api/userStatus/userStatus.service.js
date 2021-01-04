@@ -10,9 +10,9 @@ module.exports = {
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('createUserStatus service error: ' + error)
+                    return callBack('create user status service error: ' + error)
                 }
-                return callBack(null, results[0])
+                return callBack(null, results)
             }
         );
     },
@@ -22,7 +22,7 @@ module.exports = {
             [],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('getUserStatus service error: ' + error)
+                    return callBack('get user status service error: ' + error)
                 }
 
                 return callBack(null, results)
@@ -35,7 +35,7 @@ module.exports = {
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('getUserStatusById service error: ' + error)
+                    return callBack('get user status by id service error: ' + error)
                 }
                 return callBack(null, results)
             }
@@ -50,7 +50,7 @@ module.exports = {
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('updateUserStatus service error: ' + error)
+                    return callBack('update user status service error: ' + error)
                 }
                 return callBack(null, results)
             }
@@ -62,7 +62,7 @@ module.exports = {
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('deleteUserStatus service error: ' + error)
+                    return callBack('delete user status service error: ' + error)
                 }
                 return callBack(null, results)
             }

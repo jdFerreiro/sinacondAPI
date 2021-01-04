@@ -10,9 +10,9 @@ module.exports = {
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('createCompanyStatus service error: ' + error)
+                    return callBack('create company status service error: ' + error)
                 }
-                return callBack(null, results[0])
+                return callBack(null, results)
             }
         );
     },
@@ -22,7 +22,7 @@ module.exports = {
             [],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('getCompanyStatuses service error: ' + error)
+                    return callBack('get company status service error: ' + error)
                 }
 
                 return callBack(null, results)
@@ -35,7 +35,7 @@ module.exports = {
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('getCompanyStatusById service error: ' + error)
+                    return callBack('get company status by id service error: ' + error)
                 }
                 return callBack(null, results)
             }
@@ -51,7 +51,7 @@ module.exports = {
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('updateCompanyStatus service error: ' + error)
+                    return callBack('update company status service error: ' + error)
                 }
                 return callBack(null, results)
             }
@@ -63,7 +63,7 @@ module.exports = {
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('deleteCompanyStatus service error: ' + error)
+                    return callBack('delete company status service error: ' + error)
                 }
                 return callBack(null, results)
             }

@@ -10,9 +10,9 @@ module.exports = {
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('createRol service error: ' + error)
+                    return callBack('create rol service error: ' + error)
                 }
-                return callBack(null, results[0])
+                return callBack(null, results)
             }
         );
     },
@@ -22,7 +22,7 @@ module.exports = {
             [],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('getRoles service error: ' + error)
+                    return callBack('get rol service error: ' + error)
                 }
 
                 return callBack(null, results)
@@ -35,7 +35,7 @@ module.exports = {
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('getRolById service error: ' + error)
+                    return callBack('get rol by id service error: ' + error)
                 }
                 return callBack(null, results)
             }
@@ -51,7 +51,7 @@ module.exports = {
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('updateRol service error: ' + error)
+                    return callBack('update rol service error: ' + error)
                 }
                 return callBack(null, results)
             }
@@ -63,7 +63,7 @@ module.exports = {
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('deleteRol service error: ' + error)
+                    return callBack('delete rol service error: ' + error)
                 }
                 return callBack(null, results)
             }

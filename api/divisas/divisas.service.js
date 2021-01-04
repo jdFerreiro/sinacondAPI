@@ -14,7 +14,7 @@ module.exports = {
                 if (error) {
                     return callBack('create divisa service error: ' + error)
                 }
-                return callBack(null, results[0])
+                return callBack(null, results)
             }
         );
     },
@@ -26,7 +26,7 @@ module.exports = {
             [],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('getcompany service error: ' + error)
+                    return callBack('get divisas service error: ' + error)
                 }
 
                 return callBack(null, results)
@@ -39,7 +39,7 @@ module.exports = {
             [data.fecha],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('get divisa service error: ' + error)
+                    return callBack('get divisas by date service error: ' + error)
                 }
                 return callBack(null, results)
             }
