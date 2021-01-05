@@ -14,7 +14,8 @@ const {
     deleteDetalleReg,
     checkAprobacion,
     createAprobacion,
-    deleteAprobacion
+    deleteAprobacion,
+    deleteDetalleFacturaReg
 } = require("./factura.controller");
 
 router.post("/", checkToken, createFacturaReg);
@@ -30,5 +31,6 @@ router.delete("/detalle/:id", checkToken, deleteDetalleReg);
 router.post("/data/approve/unit", checkToken, checkAprobacion)
 router.post("/data/approve", checkToken, createAprobacion)
 router.delete("/data/approve", checkToken, deleteAprobacion)
+router.delete("/detalleByFactura/:id", checkToken, deleteDetalleFacturaReg)
 
 module.exports = router;

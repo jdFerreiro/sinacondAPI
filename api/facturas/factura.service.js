@@ -3,11 +3,11 @@ const pool = require("../../config/database");
 module.exports = {
     createFactura: (data, callBack) => {
         pool.query(
-            `INSERT INTO factura (idcompany, proveedor, nroDocumento, fechacompra, idStatus, lastStatusDate, createUserId, createdAt)
+            `INSERT INTO factura (idcompany, idproveedor, nroDocumento, fechacompra, idStatus, lastStatusDate, createUserId, createdAt)
                             VALUES(?, ?, ?, ?, 1, utc_timestamp, ?, utc_timestamp)`,
             [
                 data.idCompany,
-                data.proveedor,
+                data.idproveedor,
                 data.nroDocumento,
                 data.fechaCompra,
                 data.idUser,
@@ -16,21 +16,23 @@ module.exports = {
                 if (error) {
                     return callBack('create factura service error: ' + error)
                 }
+
                 return callBack(null, results)
             }
         );
     },
     getFacturas: (data, callBack) => {
         pool.query( 
-            `SELECT f.*, SUM(IFNULL(fdME.precioTotal,0)) montoME, SUM(IFNULL(fdLocal.precioTotal,0)) montoLocal, 
-                fs.name status, p.name proveedor
+            `SELECT f.*
+                , fs.name status
+                , p.nombre proveedor
                 , (SELECT COUNT(*) FROM facturaaprobacion fp WHERE fp.idFactura = f.id) aprobaciones
                 , (SELECT COUNT(*) FROM facturaaprobacion fa WHERE fa.idFactura = f.id AND fa.idUnit = ?) aprobado
+                , (SELECT SUM(IFNULL(fdME.precioTotal,0)) FROM facturadetalle fdME WHERE fdME.idFactura = f.id AND IFNULL(fdME.dolares,0) = 1) montoME
+                , (SELECT SUM(IFNULL(fdME.precioTotal,0)) FROM facturadetalle fdME WHERE fdME.idFactura = f.id AND IFNULL(fdME.dolares,0) = 0) montoLocal
             FROM factura f
                 INNER JOIN facturaStatus fs ON fs.id = f.idStatus
                 INNER JOIN proveedor p ON p.id = f.idproveedor
-                LEFT JOIN facturadetalle fdME ON fdME.idFactura = f.id AND fdME.dolares = 1
-                LEFT JOIN facturadetalle fdLocal ON fdLocal.idFactura = f.id AND fdLocal.dolares = 0
             WHERE idcompany = ?`,
             [
                 data.idU,
@@ -40,14 +42,17 @@ module.exports = {
                 if (error) {
                     return callBack('get facturas service error: ' + error)
                 }
-
                 return callBack(null, results)
             }
         );
     },
     getFacturaById: (id, callBack) => {
         pool.query(
-            `SELECT * FROM factura WHERE id = ?`,
+            `SELECT f.*
+                , (SELECT SUM(IFNULL(fdME.precioTotal,0)) FROM facturadetalle fdME WHERE fdME.idFactura = f.id AND IFNULL(fdME.dolares,0) = 1) montoME
+                , (SELECT SUM(IFNULL(fdME.precioTotal,0)) FROM facturadetalle fdME WHERE fdME.idFactura = f.id AND IFNULL(fdME.dolares,0) = 0) montoLocal
+        FROM factura f
+             WHERE id = ?`,
             [id],
             (error, results, fields) => {
                 if (error) {
@@ -58,18 +63,19 @@ module.exports = {
         );
     },
     updateFactura: (data, callBack) => {
+        console.log(data);
         pool.query(
             `UPDATE factura 
             SET idcompany = ?,
-                proveedor = ?,
+                idproveedor = ?,
                 nroDocumento = ?,
-                fechacompra = ?,
+                fechacompra = STR_TO_DATE(?),
                 updatedAt = utc_timestamp,
                 updatedUserId = ?
             WHERE id = ?;`,
             [
                 data.idCompany,
-                data.proveedor,
+                data.idproveedor,
                 data.nroDocumento,
                 data.fechaCompra,
                 data.idUser,
@@ -99,7 +105,7 @@ module.exports = {
     },
     createDetalle: (data, callBack) => {
         pool.query(
-            `INSERT INTO facturaDetalle (idFactura, cantidad, descripción, precioUnitario, dolares, createUserId, createdAt)
+            `INSERT INTO facturaDetalle (idFactura, cantidad, descripcion, precioUnitario, dolares, createUserId, createdAt)
                             VALUES(?, ?, ?, ?, ?, ?, utc_timestamp)`,
             [
                 data.idFactura,
@@ -149,7 +155,7 @@ module.exports = {
             `UPDATE facturadetalle  
             SET idFactura = ?,
                 cantidad = ?,
-                descripción = ?,
+                descripcion = ?,
                 precioUnitario = ?,
                 updatedAt = utc_timestamp,
                 updatedUserId = ?
@@ -173,6 +179,20 @@ module.exports = {
     deleteDetalle: (id, callBack) => {
         pool.query(
             `DELETE FROM facturadetalle where id = ?`,
+            [
+                id
+            ],
+            (error, results, fields) => {
+                if (error) {
+                    return callBack('delete detalle factura service error: ' + error)
+                }
+                return callBack(null, results)
+            }
+        );
+    },
+    deleteDetalleFactura: (id, callBack) => {
+        pool.query(
+            `DELETE FROM facturadetalle where idFactura = ?`,
             [
                 id
             ],
@@ -213,6 +233,17 @@ module.exports = {
                     return callBack('delete detalle factura service error: ' + error)
                 }
                 return callBack(null, results)
+            }
+        );
+    },
+    facturaAprobada: (data, callBack) => {
+        pool.query(`CALL factura_status_aprobado(?)`,
+            [data.idFactura],
+            (error, results, fields) => {
+                if (error) {
+                    return callBack('Status factura aprobada service error: ' + error)
+                }
+                return callBack(null, results);
             }
         );
     },
