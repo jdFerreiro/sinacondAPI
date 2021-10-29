@@ -3,14 +3,16 @@ const pool = require("../../config/database");
 module.exports = {
     create: (data, callBack) => {
         pool.query(
-            `INSERT INTO user (name, idRole, email, password, idStatus, lastStatusUpdate, createAt) VALUES(?, ?, ?, ?, ?, ?, UTC_TIMESTAMP);`,
+            `INSERT INTO usuario (email, clave, fechaestado, primeravez, nombre, apellidos, identificacion, estadousuario_id, rol_id) 
+                VALUES(?, ?, UTC_TIMESTAMP, 1, ?, ?, ?, ?, ?);`,
             [
-                data.name,
-                data.idRole,
                 data.email,
-                data.password,
+                data.clave,
+                data.nombre,
+                data.apellidos,
+                data.identificacion,
                 data.idStatus,
-                data.lastStatusUpdate
+                data.idRol
             ],
             (error, results, fields) => {
                 if (error) {
@@ -22,7 +24,7 @@ module.exports = {
     },
     getAll: callBack => {
         pool.query(
-            `SELECT * FROM user ORDER BY name;`,
+            `SELECT * FROM usuario WHERE id <> 1 ORDER BY apellidos, nombre;`,
             [],
             (error, results, fields) => {
                 if (error) {
@@ -35,7 +37,7 @@ module.exports = {
     },
     getById: (id, callBack) => {
         pool.query(
-            `SELECT id, name, idRole, email, password, lastlogin, idStatus, lastStatusUpdate, createAt, updateAt FROM user WHERE id = ?`,
+            `SELECT * FROM usuario WHERE id = ?`,
             [id],
             (error, results, fields) => {
                 if (error) {
@@ -47,12 +49,16 @@ module.exports = {
     },
     updateRec: (data, callBack) => {
         pool.query(
-            `UPDATE user SET name = ?, idRole = ?, email = ?, password = ?, updateAt = UTC_TIMESTAMP WHERE id = ?;`,
+            `UPDATE usuario 
+                SET email = ?, clave = ?, fechaestado = UTC_TIMESTAMP, nombre = ?, apellidos = ?, identificacion = ?, rol_id = ? 
+                WHERE id = ?;`,
             [
-                data.name,
-                data.idRole,
                 data.email,
-                data.password,
+                data.clave,
+                data.nombre,
+                data.apellidos,
+                data.identificacion,
+                data.idRol,
                 data.id
             ],
             (error, results, fields) => {
@@ -65,7 +71,7 @@ module.exports = {
     },
     updateRecStatus: (data, callBack) => {
         pool.query(
-            `UPDATE user SET idStatus = ?, lastStatusUpdate = UTC_TIMESTAMP, updateAt = UTC_TIMESTAMP WHERE id = ?;`,
+            `UPDATE usuario SET estadousuario_id = ?, fechaestado = UTC_TIMESTAMP WHERE id = ?;`,
             [
                 data.idStatus,
                 data.id
@@ -80,7 +86,7 @@ module.exports = {
     },
     deleteRec: (id, callBack) => {
         pool.query(
-            `DELETE FROM user WHERE id = ?`,
+            `DELETE FROM usuario WHERE id = ?`,
             [id],
             (error, results, fields) => {
                 if (error) {
@@ -92,7 +98,7 @@ module.exports = {
     },
     login: (data, callBack) => {
         pool.query(
-            `SELECT * FROM user WHERE email = ?`,
+            `SELECT * FROM usuario WHERE email = ?`,
             data.email,
             (error, results, fields) => {
                 if (error) {

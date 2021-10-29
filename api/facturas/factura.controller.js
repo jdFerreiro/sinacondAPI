@@ -109,7 +109,7 @@ module.exports = {
             }
             return res.status(200).json({
                 success: 1,
-                message: "Registro eliminado correctamente"
+                message: "Registro eliminado satisfactoriamente"
             });
         });
     },
@@ -219,7 +219,7 @@ module.exports = {
             }
             return res.status(200).json({
                 success: 1,
-                message: "Registro eliminado correctamente"
+                message: "Registro eliminado satisfactoriamente"
             });
         });
     },
@@ -242,7 +242,7 @@ module.exports = {
             }
             return res.status(200).json({
                 success: 1,
-                message: "Registro eliminado correctamente"
+                message: "Registro eliminado satisfactoriamente"
             });
         });
     },
@@ -325,7 +325,7 @@ module.exports = {
 
                 return res.status(200).json({
                     success: 1,
-                    message: "Registro eliminado correctamente"
+                    message: "Registro eliminado satisfactoriamente"
                 });
             });
         });

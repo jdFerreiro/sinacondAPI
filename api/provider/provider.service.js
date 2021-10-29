@@ -3,20 +3,48 @@ const pool = require("../../config/database");
 module.exports = {
     create: (data, callBack) => {
         pool.query(
-            `INSERT INTO proveedor(nombre, nroregistrofiscal, direccion, idcountry, idprovince, idcity, zipcode, 
-                                    email, telefonos, createUserId, createdAt)
-                            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, utc_timestamp)`,
+            `INSERT INTO proveedor(nombre, identificacion, direccion, totalfacturado, totalpagado, telefono)
+                            VALUES(?, ?, ?, ?, ?, ?)`,
             [
                 data.name,
-                data.nroregistrofiscal,
+                data.identification,
                 data.address,
-                data.idCountry,
-                data.idProvince,
-                data.idCity,
-                data.zipCode,
-                data.email,
-                data.telefonos,
-                data.idUser,
+                data.totalBill,
+                data.totalPay,
+                data.phone
+            ],
+            (error, results, fields) => {
+                if (error) {
+                    return callBack('create provider service error: ' + error)
+                }
+                return callBack(null, results)
+            }
+        );
+    },
+    linkBuilding: (data, callBack) => {
+        pool.query(
+            `INSERT INTO proveedoredificio(proveedor_id, edificio_id, fechacreacion)
+                            VALUES(?, ?, UTC_TIMESTAMP)`,
+            [
+                data.providerId,
+                data.buildingId
+            ],
+            (error, results, fields) => {
+                if (error) {
+                    return callBack('create provider service error: ' + error)
+                }
+                return callBack(null, results)
+            }
+        );
+    },
+    unlinkBuilding: (data, callBack) => {
+        pool.query(
+            `DELETE 
+            FROM proveedoredificio
+            WHERE proveedor_id = ? AND edificio_id = ?;`,
+            [
+                data.providerId,
+                data.buildingId
             ],
             (error, results, fields) => {
                 if (error) {
@@ -56,28 +84,19 @@ module.exports = {
     updateRec: (data, callBack) => {
         pool.query(`UPDATE proveedor
                     SET nombre = ?,
-                        nroregistrofiscal = ?,
-                        direccion = ?,
-                        idcountry = ?,
-                        idprovince = ?,
-                        idcity = ?,
-                        zipcode = ?,
-                        email = ?,
-                        telefonos = ?,
-                        updatedAt = utc_timestamp,
-                        updatedUserId = ?
+                        identificacion = ?, 
+                        direccion = ?, 
+                        totalfacturado = ?, 
+                        totalpagado = ?, 
+                        telefono = ?
                     WHERE id = ?;`,
             [
                 data.name,
-                data.nroregistrofiscal,
+                data.identification,
                 data.address,
-                data.idCountry,
-                data.idProvince,
-                data.idCity,
-                data.zipCode,
-                data.email,
-                data.telefonos,
-                data.idUser,
+                data.totalBill,
+                data.totalPay,
+                data.phone,
                 data.id
             ],
             (error, results, fields) => {

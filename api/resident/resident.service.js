@@ -1,89 +1,50 @@
 const pool = require("../../config/database");
 
 module.exports = {
-    updateRec: (data, callBack) => {
-        pool.query(`CALL updateResident(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    create: (data, callBack) => {
+        pool.query(
+            `INSERT INTO copropietario (nombre, apellido, correoelectronico, fechaultimacondicion, telefono_id) 
+                        VALUES (?,?,?,?,?)`,
             [
-                data.id,
                 data.name,
-                data.identificacion,
-                data.residenttypeid,
+                data.surname,
                 data.email,
-                data.nrotelefonoprincipal,
-                data.nrotelefonosecundario,
-                data.userId,
-                data.unitId,
-                data.password,
+                data.lastCondition,
+                data.telephone_id
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('update resident service error: ' + error)
+                    return callBack('create resident service error: ' + error)
                 }
-
                 return callBack(null, results)
             }
         );
     },
-    getEmails: callBack => {
+    setUnit: (data, callBack) => {
         pool.query(
-            `SELECT DISTINCT email
-             FROM resident 
-             ORDER BY email;`,
-            [],
-            (error, results, fields) => {
-                if (error) {
-                    return callBack('get emails service error: ' + error)
-                }
-
-                return callBack(null, results)
-            }
-        );
-    },
-    getByEmail: (data, callBack) => {
-        pool.query(
-            `SELECT r.*, ur.residenttypeid
-            FROM resident r
-                LEFT JOIN unitresident ur on ur.idresident = r.id AND ur.idunit = ?
-            WHERE email = ?`,
+            `INSERT INTO unidadresidente (unidad_id, copropietario_id, fecharegistro) 
+                        VALUES (?,?,?)`,
             [
                 data.unitId,
-                data.email
+                data.residentId,
+                data.recordDate
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('get resident by email service error: ' + error)
+                    return callBack('create resident service error: ' + error)
                 }
                 return callBack(null, results)
             }
         );
     },
-    getAll: (id, callBack) => {
+    getById: (id, callBack) => {
         pool.query(
-            `SELECT r.*, rt.name residentType
-             FROM unitresident ur
-                JOIN resident r ON r.id = ur.idResident
-                LEFT JOIN unitresidenttype rt ON rt.id = ur.residentTypeId
-            WHERE idunit = ?;`,
+            `SELECT resident.*, tt.nombre phoneType, t.codigoarea phoneCode, t.numero phoneNumber
+            FROM copropietario resident
+                INNER JOIN telefono t ON t.id = resident.telefono_id
+                INNER JOIN tipotelefono tt ON tt.id = t.tipotelefono_id
+            WHERE resident.id = ?;`,
             [id],
-            (error, results, fields) => {
-                if (error) {
-                    return callBack('get resident by unitId service error: ' + error)
-                }
-
-                return callBack(null, results)
-            }
-        );
-    },
-    getById: (data, callBack) => {
-        pool.query(
-            `SELECT r.*, ur.residenttypeid
-             FROM resident r
-                LEFT JOIN unitresident ur on ur.idresident = r.id AND ur.idunit = ?
-             WHERE id = ?`,
-            [
-                data.unitId,
-                data.id
-            ],
             (error, results, fields) => {
                 if (error) {
                     return callBack('get resident by id service error: ' + error)
@@ -92,9 +53,35 @@ module.exports = {
             }
         );
     },
+    updateRec: (data, callBack) => {
+        pool.query(
+            `UPDATE copropietario 
+                SET nombre = ?, 
+                    apellido = ?, 
+                    correoelectronico = ?, 
+                    fechaultimacondicion = ?, 
+                    telefono_id = ?
+                WHERE id = ?;
+            `,
+            [
+                data.name,
+                data.surname,
+                data.email,
+                data.lastCondition,
+                data.telephone_id,
+                data.id
+            ],
+            (error, results, fields) => {
+                if (error) {
+                    return callBack('update resident service error: ' + error)
+                }
+                return callBack(null, results)
+            }
+        );
+    },
     deleteRec: (id, callBack) => {
         pool.query(
-            `CALL deleteResident(?);`,
+            `DELETE FROM copropietario WHERE id = ?`,
             [id],
             (error, results, fields) => {
                 if (error) {
@@ -103,5 +90,23 @@ module.exports = {
                 return callBack(null, results)
             }
         );
-    }
+    },
+    deleteUnitRec: (data, callBack) => {
+        pool.query(
+            `DELETE 
+            FROM unidadresidente 
+            WHERE unidad_id = ? 
+                AND copropietario_id = ?;`,
+            [
+                data.unitId, 
+                data.residentId
+            ],
+            (error, results, fields) => {
+                if (error) {
+                    return callBack('delete resident service error: ' + error)
+                }
+                return callBack(null, results)
+            }
+        );
+    },
 };

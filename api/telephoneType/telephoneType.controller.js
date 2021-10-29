@@ -3,7 +3,7 @@ const { create,
     getById, 
     updateRec, 
     deleteRec 
-} = require("./companyStatus.service");
+} = require("./telephoneType.service");
 
 module.exports = {
     createReg: (req, res) => {
@@ -90,7 +90,7 @@ module.exports = {
             }
             return res.status(200).json({
                 success: 1,
-                message: "Registro elimiado correctamente"
+                message: "Registro eliminado satisfactoriamente"
             });
         });
     }

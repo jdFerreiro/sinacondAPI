@@ -91,7 +91,7 @@ module.exports = {
             }
             return res.status(200).json({
                 success: 1,
-                message: "Registro elimiado correctamente"
+                message: "Registro eliminado satisfactoriamente"
             });
         });
     }

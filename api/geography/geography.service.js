@@ -3,10 +3,9 @@ const pool = require("../../config/database");
 module.exports = {
     createCountry: (data, callBack) => {
         pool.query(
-            `INSERT INTO country (name, createUserId, createdAt) VALUES (?,?,UTC_TIMESTAMP)`,
+            `INSERT INTO pais (nombre) VALUES (?)`,
             [
-                data.name,
-                data.userId
+                data.nombre
             ],
             (error, results, fields) => {
                 if (error) {
@@ -18,7 +17,7 @@ module.exports = {
     },
     getCountries: callBack => {
         pool.query(
-            `SELECT * FROM country ORDER BY name;`,
+            `SELECT * FROM pais ORDER BY nombre;`,
             [],
             (error, results, fields) => {
                 if (error) {
@@ -31,7 +30,7 @@ module.exports = {
     },
     getCountryById: (id, callBack) => {
         pool.query(
-            `SELECT id, name, createUserId, createdAt, updatedUserId, updateAt FROM Country WHERE id = ?`,
+            `SELECT nombre FROM pais WHERE id = ?`,
             [id],
             (error, results, fields) => {
                 if (error) {
@@ -43,11 +42,10 @@ module.exports = {
     },
     updateCountryRec: (data, callBack) => {
         pool.query(
-            `UPDATE country SET name = ?, updateAt = UTC_TIMESTAMP, updatedUserId = ? WHERE id = ?;
+            `UPDATE pais SET nombre = ? WHERE id = ?;
             `,
             [
-                data.name,
-                data.userId,
+                data.nombre,
                 data.id,
             ],
             (error, results, fields) => {
@@ -60,7 +58,7 @@ module.exports = {
     },
     deleteCountryRec: (id, callBack) => {
         pool.query(
-            `DELETE FROM country WHERE id = ?;`,
+            `DELETE FROM pais WHERE id = ?;`,
             [id],
             (error, results, fields) => {
                 if (error) {
@@ -70,108 +68,105 @@ module.exports = {
             }
         );
     },
-    createProvince: (data, callBack) => {
+    createState: (data, callBack) => {
         pool.query(
-            `INSERT INTO Province (name, idCountry, createUserId, createdAt) VALUES (?,?,?,UTC_TIMESTAMP)`,
+            `INSERT INTO estado (nombre, pais_id) VALUES (?,?)`,
             [
-                data.name,
-                data.countryId,
-                data.userId
+                data.nombre,
+                data.countryId
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('create province service error: ' + error)
+                    return callBack('create state service error: ' + error)
                 }
                 return callBack(null, results)
             }
         );
     },
-    getProvinces: (id, callBack) => {
+    getStates: (id, callBack) => {
         pool.query(
-            `SELECT * FROM province WHERE idCountry = ? ORDER BY name;`,
+            `SELECT id, nombre FROM estado WHERE pais_id = ? ORDER BY nombre;`,
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('get province service error: ' + error)
+                    return callBack('get state service error: ' + error)
                 }
  
                 return callBack(null, results)
             }
         );
     },
-    getProvinceById: (id, callBack) => {
+    getStateById: (id, callBack) => {
         pool.query(
-            `SELECT id, name, idCountry, createUserId, createdAt, updatedUserId, updateAt FROM province WHERE id = ?`,
+            `SELECT nombre, pais_id FROM estado WHERE id = ?`,
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('get province by id service error: ' + error)
+                    return callBack('get state by id service error: ' + error)
                 }
                 return callBack(null, results)
             }
         );
     },
-    updateProvinceRec: (data, callBack) => {
+    updateStateRec: (data, callBack) => {
         pool.query(
-            `UPDATE province SET name = ?, idCountry = ?, updateAt = UTC_TIMESTAMP, updatedUserId = ? WHERE id = ?;
+            `UPDATE estado SET nombre = ?, pais_id = ? WHERE id = ?;
             `,
             [
-                data.name,
+                data.nombre,
                 data.countryId,
-                data.userId,
                 data.id
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('update province service error: ' + error)
+                    return callBack('update state service error: ' + error)
                 }
                 return callBack(null, results)
             }
         );
     },
-    deleteProvinceByCountryRec: (id, callBack) => {
+    deleteStateByCountryRec: (id, callBack) => {
         pool.query(
-            `DELETE FROM city WHERE idCountry = ?; DELETE FROM country WHERE id = ?;`,
+            `DELETE FROM estado WHERE pais_id = ?;`,
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('delete province by country service error: ' + error)
+                    return callBack('delete state by pais service error: ' + error)
                 }
                 return callBack(null, results)
             }
         );
     },
-    deleteProvinceRec: (id, callBack) => {
+    deleteStateRec: (id, callBack) => {
         pool.query(
-            `DELETE FROM province WHERE id = ?;`,
+            `DELETE FROM estado WHERE id = ?;`,
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('delete province service error: ' + error)
+                    return callBack('delete state service error: ' + error)
                 }
                 return callBack(null, results)
             }
         );
     },
-    createCity: (data, callBack) => {
+    createCounty: (data, callBack) => {
         pool.query(
-            `INSERT INTO City (name, idProvince, createUserId, createdAt) VALUES (?,?,?,UTC_TIMESTAMP)`,
+            `INSERT INTO municipio (nombre, estado_id) VALUES (?,?)`,
             [
-                data.name,
-                data.provinceId,
-                data.userId,
+                data.nombre,
+                data.stateId
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('create city service error: ' + error)
+                    return callBack('create county service error: ' + error)
                 }
                 return callBack(null, results)
             }
         );
     },
-    getCities: (id, callBack) => {
+    getCounties: (id, callBack) => {
         pool.query(
-            `SELECT * FROM city WHERE idProvince = ? ORDER BY name;`,
+            `SELECT id, nombre FROM municipio WHERE estado_id = ? ORDER BY nombre;`,
             [id],
             (error, results, fields) => {
                 if (error) {
@@ -182,55 +177,54 @@ module.exports = {
             }
         );
     },
-    getCityById: (id, callBack) => {
+    getCountyById: (id, callBack) => {
         pool.query(
-            `SELECT id, name, idProvince, createUserId, createdAt, updatedUserId, updateAt FROM city WHERE id = ?`,
+            `SELECT nombre, estado_id FROM municipio WHERE id = ?`,
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('get city by id service error: ' + error)
+                    return callBack('get county by id service error: ' + error)
                 }
                 return callBack(null, results)
             }
         );
     },
-    updateCityRec: (data, callBack) => {
+    updateCountyRec: (data, callBack) => {
         pool.query(
-            `UPDATE city SET name = ?, idProvince = ?, updateAt = UTC_TIMESTAMP, updatedUserId = ? WHERE id = ?;
+            `UPDATE municipio SET nombre = ?, estado_id = ? WHERE id = ?;
             `,
             [
-                data.name,
-                data.idProvince,
-                data.userId,
+                data.nombre,
+                data.stateId,
                 data.id
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('update city service error: ' + error)
+                    return callBack('update county service error: ' + error)
                 }
                 return callBack(null, results)
             }
         );
     },
-    deleteCityByProvinceRec: (id, callBack) => {
+    deleteCountyByStateRec: (id, callBack) => {
         pool.query(
-            `DELETE FROM city WHERE idProvince = ?; DELETE FROM country WHERE id = ?;`,
+            `DELETE FROM municipio WHERE estado_id = ?;`,
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('delete city by province service error: ' + error)
+                    return callBack('delete county by state service error: ' + error)
                 }
                 return callBack(null, results)
             }
         );
     },
-    deleteCityRec: (id, callBack) => {
+    deleteCountyRec: (id, callBack) => {
         pool.query(
-            `DELETE FROM city WHERE id = ?;`,
+            `DELETE FROM municipio WHERE id = ?;`,
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('delete city service error: ' + error)
+                    return callBack('delete county service error: ' + error)
                 }
                 return callBack(null, results)
             }

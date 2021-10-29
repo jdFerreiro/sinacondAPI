@@ -3,14 +3,25 @@ const pool = require("../../config/database");
 module.exports = {
     create: (data, callBack) => {
         pool.query(
-            `INSERT INTO companyStatus (id, name, createUserId, createdAt) VALUES (?,?,1,UTC_TIMESTAMP)`,
+            `INSERT INTO gasto (
+                numerodocumento, fechagasto, fecharegistro, fechaauthorizacion, monto, edificio_id, tipogasto_id,
+                proveedor_id, nropartes, mesinicio) 
+            VALUES (?,?,?,?,?,?,?,?,?,?)`,
             [
-                data.id,
-                data.name
+                data.documentId,
+                data.documentDate,
+                data.recordDate,
+                data.authorizationDate,
+                data.amount,
+                data.buildingId,
+                data.expenseTypeId,
+                data.providerId,
+                data.partsPayNumber,
+                data.startMonth
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('create company status service error: ' + error)
+                    return callBack('create expense type service error: ' + error)
                 }
                 return callBack(null, results)
             }
@@ -18,11 +29,13 @@ module.exports = {
     },
     getAll: callBack => {
         pool.query(
-            `SELECT * FROM companyStatus ORDER BY name;`,
+            `SELECT id, nombre 
+            FROM gasto 
+            ORDER BY nombre;`,
             [],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('get company status service error: ' + error)
+                    return callBack('get expense type service error: ' + error)
                 }
 
                 return callBack(null, results)
@@ -31,11 +44,11 @@ module.exports = {
     },
     getById: (id, callBack) => {
         pool.query(
-            `SELECT id, name, createUserId, createdAt, updatedUserId, updateAt FROM companyStatus WHERE id = ?`,
+            `SELECT nombre FROM tipogasto WHERE id = ?`,
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('get company status by id service error: ' + error)
+                    return callBack('get expense type service error: ' + error)
                 }
                 return callBack(null, results)
             }
@@ -43,15 +56,15 @@ module.exports = {
     },
     updateRec: (data, callBack) => {
         pool.query(
-            `UPDATE companyStatus SET name = ?, updateAt = UTC_TIMESTAMP, updatedUserId = 1 WHERE id = ?;
+            `UPDATE tipogasto SET nombre = ? WHERE id = ?;
             `,
             [
-                data.name,
+                data.nombre,
                 data.id
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('update company status service error: ' + error)
+                    return callBack('update expense type service error: ' + error)
                 }
                 return callBack(null, results)
             }
@@ -59,11 +72,11 @@ module.exports = {
     },
     deleteRec: (id, callBack) => {
         pool.query(
-            `DELETE FROM companyStatus WHERE id = ?`,
+            `DELETE FROM tipogasto WHERE id = ?`,
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('delete company status service error: ' + error)
+                    return callBack('delete expense type service error: ' + error)
                 }
                 return callBack(null, results)
             }

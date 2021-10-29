@@ -5,7 +5,7 @@ module.exports = {
         let token = req.get("authorization");
         if (token) {
             token = token.slice(7);
-            verify(token, "51n3c0nd831u3md3c0", (err, decoded) => {
+            verify(token, "51n4c0nd83©u3md3c0", (err, decoded) => {
                 if (err) {
                     res.json({
                         success: 0,
@@ -21,5 +21,5 @@ module.exports = {
                 message: "Acceso restringido: Usuario no autorizado"
             });
         }
-    }
+    }   
 }

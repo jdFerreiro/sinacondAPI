@@ -3,14 +3,14 @@ const pool = require("../../config/database");
 module.exports = {
     create: (data, callBack) => {
         pool.query(
-            `INSERT INTO estadousuario (id, nombre) VALUES (?,?)`,
+            `INSERT INTO tipotelefono (id, nombre) VALUES (?,?)`,
             [
                 data.id,
                 data.nombre
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('create user status service error: ' + error)
+                    return callBack('create telephone type service error: ' + error)
                 }
                 return callBack(null, results)
             }
@@ -18,11 +18,11 @@ module.exports = {
     },
     getAll: callBack => {
         pool.query(
-            `SELECT * FROM estadousuario ORDER BY nombre;`,
+            `SELECT id, nombre FROM tipotelefono ORDER BY nombre;`,
             [],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('get user status service error: ' + error)
+                    return callBack('get telephone type service error: ' + error)
                 }
 
                 return callBack(null, results)
@@ -31,11 +31,11 @@ module.exports = {
     },
     getById: (id, callBack) => {
         pool.query(
-            `SELECT id, nombre FROM estadousuario WHERE id = ?`,
+            `SELECT nombre FROM tipotelefono WHERE id = ?`,
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('get user status by id service error: ' + error)
+                    return callBack('get telephone type service error: ' + error)
                 }
                 return callBack(null, results)
             }
@@ -43,14 +43,15 @@ module.exports = {
     },
     updateRec: (data, callBack) => {
         pool.query(
-            `UPDATE estadousuario SET nombre = ? WHERE id = ?;`,
+            `UPDATE tipotelefono SET nombre = ? WHERE id = ?;
+            `,
             [
                 data.nombre,
                 data.id
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('update user status service error: ' + error)
+                    return callBack('update telephone type service error: ' + error)
                 }
                 return callBack(null, results)
             }
@@ -58,11 +59,11 @@ module.exports = {
     },
     deleteRec: (id, callBack) => {
         pool.query(
-            `DELETE FROM estadousuario WHERE id = ?`,
+            `DELETE FROM tipotelefono WHERE id = ?`,
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('delete user status service error: ' + error)
+                    return callBack('delete telephone type service error: ' + error)
                 }
                 return callBack(null, results)
             }

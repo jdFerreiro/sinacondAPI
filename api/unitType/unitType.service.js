@@ -3,10 +3,9 @@ const pool = require("../../config/database");
 module.exports = {
     create: (data, callBack) => {
         pool.query(
-            `INSERT INTO unittype (id, name, createUserId, createdAt) VALUES (?,?,1,UTC_TIMESTAMP)`,
+            `INSERT INTO tipounidad (nombre) VALUES (?)`,
             [
-                data.id,
-                data.name
+                data.nombre
             ],
             (error, results, fields) => {
                 if (error) {
@@ -18,7 +17,7 @@ module.exports = {
     },
     getAll: callBack => {
         pool.query(
-            `SELECT id, name FROM unittype ORDER BY name;`,
+            `SELECT id, nombre FROM tipounidad ORDER BY nombre;`,
             [],
             (error, results, fields) => {
                 if (error) {
@@ -31,7 +30,7 @@ module.exports = {
     },
     getById: (id, callBack) => {
         pool.query(
-            `SELECT id, name, createUserId, createdAt, updatedUserId, updateAt FROM unittype WHERE id = ?`,
+            `SELECT nombre FROM tipounidad WHERE id = ?`,
             [id],
             (error, results, fields) => {
                 if (error) {
@@ -43,10 +42,10 @@ module.exports = {
     },
     updateRec: (data, callBack) => {
         pool.query(
-            `UPDATE unittype SET name = ?, updateAt = UTC_TIMESTAMP, updatedUserId = 1 WHERE id = ?;
+            `UPDATE tipounidad SET nombre = ? WHERE id = ?;
             `,
             [
-                data.name,
+                data.nombre,
                 data.id
             ],
             (error, results, fields) => {
@@ -59,7 +58,7 @@ module.exports = {
     },
     deleteRec: (id, callBack) => {
         pool.query(
-            `DELETE FROM unittype WHERE id = ?`,
+            `DELETE FROM tipounidad WHERE id = ?`,
             [id],
             (error, results, fields) => {
                 if (error) {

@@ -3,18 +3,18 @@ const { createCountry,
     getCountryById,
     updateCountryRec,
     deleteCountryRec,
-    createProvince,
-    getProvinces,
-    getProvinceById,
-    updateProvinceRec,
-    deleteProvinceByCountryRec,
-    deleteProvinceRec,
-    createCity,
-    getCities,
-    getCityById,
-    updateCityRec,
-    deleteCityByCountryRec,
-    deleteCityRec
+    createState,
+    getStates,
+    getStateById,
+    updateStateRec,
+    deleteStateByCountryRec,
+    deleteStateRec,
+    createCounty,
+    getCounties,
+    getCountyById,
+    updateCountyRec,
+    deleteCountyByStateRec,
+    deleteCountyRec
 } = require("./geography.service");
 
 module.exports = {
@@ -99,13 +99,13 @@ module.exports = {
             }
             return res.status(200).json({
                 success: 1,
-                message: "Registro elimiado correctamente"
+                message: "Registro eliminado satisfactoriamente"
             });
         });
     },
-    createProvinceReg: (req, res) => {
+    createStateReg: (req, res) => {
         const body = req.body;
-        createProvince(body, (err, results) => {
+        createState(body, (err, results) => {
             if (err) {
                 return res.status(500).json({
                     success: 0,
@@ -118,9 +118,9 @@ module.exports = {
             });
         });
     },
-    getAllProvinceData: (req, res) => {
+    getAllStateData: (req, res) => {
         const id = req.params.id;
-        getProvinces(id, (err, results) => {
+        getStates(id, (err, results) => {
             if (err) {
                 return res.status(500).json({
                     success: 0,
@@ -134,9 +134,9 @@ module.exports = {
             });
         });
     },
-    getProvinceReg: (req, res) => {
+    getStateReg: (req, res) => {
         const id = req.params.id;
-        getProvinceById(id, (err, results) => {
+        getStateById(id, (err, results) => {
             if (err) {
                 console.log(err);
                 return;
@@ -153,9 +153,9 @@ module.exports = {
             });
         });
     },
-    updateProvinceReg: (req, res) => {
+    updateStateReg: (req, res) => {
         const body = req.body;
-        updateProvinceRec(body, (err, results) => {
+        updateStateRec(body, (err, results) => {
             if (err) {
                 return res.status(500).json({
                     success: 0,
@@ -168,9 +168,9 @@ module.exports = {
             });
         });
     },
-    deleteProvinceReg: (req, res) => {
+    deleteStateReg: (req, res) => {
         const id = req.params.id;
-        deleteProvinceRec(id, (err, results) => {
+        deleteStateRec(id, (err, results) => {
             if (err) {
                 return res.status(500).json({
                     success: 0,
@@ -185,13 +185,13 @@ module.exports = {
             }
             return res.status(200).json({
                 success: 1,
-                message: "Registro eliminado correctamente"
+                message: "Registro eliminado satisfactoriamente"
             });
         });
     },
-    deleteProvinceByCountryReg: (req, res) => {
+    deleteStateByCountryReg: (req, res) => {
         const id = req.params.id;
-        deleteProvinceByCountryRec(id, (err, results) => {
+        deleteStateByCountryRec(id, (err, results) => {
             if (err) {
                 return res.status(500).json({
                     success: 0,
@@ -206,13 +206,13 @@ module.exports = {
             }
             return res.status(200).json({
                 success: 1,
-                message: "Registro elimiado correctamente"
+                message: "Registro eliminado satisfactoriamente"
             });
         });
     },
-    createCityReg: (req, res) => {
+    createCountyReg: (req, res) => {
         const body = req.body;
-        createCity(body, (err, results) => {
+        createCounty(body, (err, results) => {
             if (err) {
                 return res.status(500).json({
                     success: 0,
@@ -225,9 +225,9 @@ module.exports = {
             });
         });
     },
-    getAllCitiesData: (req, res) => {
+    getAllCountiesData: (req, res) => {
         const id = req.params.id;
-        getCities(id, (err, results) => {
+        getCounties(id, (err, results) => {
             if (err) {
                 return res.status(500).json({
                     success: 0,
@@ -241,9 +241,9 @@ module.exports = {
             });
         });
     },
-    getCityReg: (req, res) => {
+    getCountyReg: (req, res) => {
         const id = req.params.id;
-        getCityById(id, (err, results) => {
+        getCountyById(id, (err, results) => {
             if (err) {
                 console.log(err);
                 return;
@@ -260,9 +260,9 @@ module.exports = {
             });
         });
     },
-    updateCityReg: (req, res) => {
+    updateCountyReg: (req, res) => {
         const body = req.body;
-        updateCityRec(body, (err, results) => {
+        updateCountyRec(body, (err, results) => {
             if (err) {
                 return res.status(500).json({
                     success: 0,
@@ -275,9 +275,9 @@ module.exports = {
             });
         });
     },
-    deleteCityReg: (req, res) => {
+    deleteCountyReg: (req, res) => {
         const id = req.params.id;
-        deleteCityRec(id, (err, results) => {
+        deleteCountyRec(id, (err, results) => {
             if (err) {
                 return res.status(500).json({
                     success: 0,
@@ -292,13 +292,13 @@ module.exports = {
             }
             return res.status(200).json({
                 success: 1,
-                message: "Registro eliminado correctamente"
+                message: "Registro eliminado satisfactoriamente"
             });
         });
     },
-    deleteCityByProvinceReg: (req, res) => {
+    deleteCountyByStateReg: (req, res) => {
         const id = req.params.id;
-        deleteCityByProvinceRec(id, (err, results) => {
+        deleteCountyByStateRec(id, (err, results) => {
             if (err) {
                 return res.status(500).json({
                     success: 0,
@@ -313,7 +313,7 @@ module.exports = {
             }
             return res.status(200).json({
                 success: 1,
-                message: "Registro elimiado correctamente"
+                message: "Registro eliminado satisfactoriamente"
             });
         });
     }

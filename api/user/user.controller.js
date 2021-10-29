@@ -16,10 +16,9 @@ module.exports = {
     createReg: (req, res) => {
         const body = req.body;
         const salt = encrypt.genSaltSync(10);
-        body.password = encrypt.hashSync(body.password, salt);
+        body.clave = encrypt.hashSync(body.clave, salt);
         create(body, (err, results) => {
             if (err) {
-                console.log(err);
                 return res.status(500).json({
                     success: 0,
                     message: "Database connection error"
@@ -35,6 +34,7 @@ module.exports = {
     getAllReg: (req, res) => {
         getAll((err, results) => {
             if (err) {
+                console.log(err);
                 return res.status(500).json({
                     success: 0,
                     message: "Database connection error"
@@ -69,7 +69,7 @@ module.exports = {
     updateReg: (req, res) => {
         const body = req.body;
         const salt = encrypt.genSaltSync(10);
-        body.password = encrypt.hashSync(body.password, salt);
+        body.clave = encrypt.hashSync(body.clave, salt);
         updateRec(body, (err, results) => {
             if (err) {
                 return res.status(500).json({
@@ -123,7 +123,7 @@ module.exports = {
             }
             return res.status(200).json({
                 success: 1,
-                message: "Registro elimiado correctamente"
+                message: "Registro eliminado satisfactoriamente"
             });
         });
     },
@@ -142,10 +142,11 @@ module.exports = {
                     message: "Correo electrónico o contraseña inválidos."
                 });
             }
-            encrypt.compare(body.password, results[0].password, (err, result) => {
+            
+            encrypt.compare(body.clave, results[0].clave, (err, result) => {
             if (result) {
                 results.password = undefined;
-                const token = jwt.sign({ result: results }, "51n3c0nd831u3md3c0", {
+                const token = jwt.sign({ result: results }, "51n4c0nd83©u3md3c0", {
                     expiresIn: "1d"
                 });
                 const userId = results[0].id;

@@ -1,4 +1,9 @@
-const { create, getById, updateRec, deleteRec, setUnit, deleteUnitRec } = require("./resident.service");
+const { create, 
+    getAll, 
+    getById, 
+    updateRec, 
+    deleteRec 
+} = require("./telephone.service");
 
 module.exports = {
     createReg: (req, res) => {
@@ -7,8 +12,22 @@ module.exports = {
             if (err) {
                 return res.status(500).json({
                     success: 0,
-                    message: "Database connection error",
-                    error: err
+                    message: "Database connection error"
+                });
+            }
+
+            return res.status(200).json({
+                success: 1,
+                data: results
+            });
+        });
+    },
+    getAllReg: (req, res) => {
+        getAll((err, results) => {
+            if (err) {
+                return res.status(500).json({
+                    success: 0,
+                    message: "Database connection error"
                 });
             }
 
@@ -37,23 +56,6 @@ module.exports = {
             });
         });
     },
-    setUnitReg: (req, res) => {
-        const body = req.body;
-        setUnit(body, (err, results) => {
-            if (err) {
-                console.log('service error: ' + err);
-                return res.status(500).json({
-                    success: 0,
-                    message: "Database connection error",
-                    error: err
-                });
-            }
-            return res.status(200).json({
-                success: 1,
-                message: 'Registro actualizado satisfactoriamente'
-            });
-        });
-    },
     updateReg: (req, res) => {
         const body = req.body;
         updateRec(body, (err, results) => {
@@ -61,8 +63,7 @@ module.exports = {
                 console.log('service error: ' + err);
                 return res.status(500).json({
                     success: 0,
-                    message: "Database connection error",
-                    error: err
+                    message: "Database connection error"
                 });
             }
             return res.status(200).json({
@@ -78,8 +79,7 @@ module.exports = {
                 console.log('service error: ' + err);
                 return res.status(500).json({
                     success: 0,
-                    message: "Database connection error",
-                    error: err
+                    message: "Database connection error"
                 });
             }
             if (!results) {
@@ -93,22 +93,5 @@ module.exports = {
                 message: "Registro eliminado satisfactoriamente"
             });
         });
-    },
-    deleteUnitReg: (req, res) => {
-        const params = req.params;
-        deleteUnitRec(params, (err, results) => {
-            if (err) {
-                console.log('service error: ' + err);
-                return res.status(500).json({
-                    success: 0,
-                    message: "Database connection error - deleteUnitReg",
-                    error: err
-                });
-            }
-            return res.status(200).json({
-                success: 1,
-                message: 'Registro actualizado satisfactoriamente'
-            });
-        });
-    },
+    }
 };

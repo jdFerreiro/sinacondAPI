@@ -3,20 +3,24 @@ const pool = require("../../config/database");
 module.exports = {
     create: (data, callBack) => {
         pool.query(
-            `INSERT INTO unit (companyId, name, alicuota, unitTypeId, unitConditionId, statusId, lastStatusDate, createUserId, createdAt, boughtDate) 
-                        VALUES (?, ?, ?, ?, ?, 1, UTC_TIMESTAMP, ?, UTC_TIMESTAMP, ?)`,
+            `INSERT INTO unidad (identificacion, piso, alicuota, fechaultimoestado, fechaultimopropietario, totalrecibo, totalpago, tipounidad_id, estadounidad_id, edificio_id, condicion_id) 
+                        VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
             [
-                data.companyId,
-                data.name,
-                data.alicuota,
-                data.unitTypeId,
-                data.unitConditionId,
-                data.userId,
-                data.boughtDate
+                data.identification,
+                data.floor,
+                data.percent,
+                data.lastStateDate,
+                data.lastCopropertyDate,
+                data.totalCosts,
+                data.totalPays,
+                data.typeId,
+                data.stateId,
+                data.buildingId,
+                data.conditionId
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('create unit service error: ' + error)
+                    return callBack('create unidad service error: ' + error)
                 }
                 return callBack(null, results)
             }
@@ -24,15 +28,19 @@ module.exports = {
     },
     getAll: (id, callBack) => {
         pool.query(
-            `SELECT *,
-                (SELECT COUNT(*) FROM unitresident WHERE unitresident.idUnit = unit.id) residents
-            FROM unit 
-            WHERE companyId = ? 
-            ORDER BY name;`,
+            `SELECT u.*, cond.nombre 'condition', edf.nombre building, edoUnd.nombre estatus, tipUnd.nombre UnitType,
+                (SELECT COUNT(*) FROM unidadresidente WHERE unidadresidente.unidad_id = u.id) residents
+            FROM unidad u
+                INNER JOIN condicion cond ON cond.id = u.condicion_id
+                INNER JOIN edificio edf ON edf.id = u.edificio_id
+                INNER JOIN estadounidad edoUnd ON edoUnd.id = u.estadounidad_id
+                INNER JOIN tipounidad tipUnd ON tipUnd.id = u.tipounidad_id
+            WHERE edificio_id = ? 
+            ORDER BY u.identificacion;`,
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('get units service error: ' + error)
+                    return callBack('get unidades service error: ' + error)
                 }
 
                 return callBack(null, results)
@@ -41,28 +49,37 @@ module.exports = {
     },
     getById: (id, callBack) => {
         pool.query(
-            `SELECT * FROM unit WHERE id = ?`,
+            `SELECT u.*, cond.nombre 'condition', edf.nombre building, edoUnd.nombre estatus, tipUnd.nombre UnitType,
+                (SELECT COUNT(*) FROM unidadresidente ur WHERE ur.unidad_Id = u.id) residents
+            FROM unidad u
+                INNER JOIN condicion cond ON cond.id = u.condicion_id
+                INNER JOIN edificio edf ON edf.id = u.edificio_id
+                INNER JOIN estadounidad edoUnd ON edoUnd.id = u.estadounidad_id
+                INNER JOIN tipounidad tipUnd ON tipUnd.id = u.tipounidad_id
+            WHERE u.id = ?`,
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('get unit by id service error: ' + error)
+                    return callBack('get unidad by id service error: ' + error)
                 }
                 return callBack(null, results)
             }
         );
     },
-    getByUser: (id, callBack) => {
+    getResidents: (id, callBack) => {
         pool.query(
-            `SELECT u.id, concat(c.name, ' - unidad: ', u.name) unit, unr.idrol, c.id companyId
-             FROM userresident ur
-                JOIN unitresident unr ON unr.idresident = ur.idresident
-                JOIN unit u on u.id = unr.idunit
-                JOIN company c ON c.id = u.companyId
-             WHERE iduser = ?`,
+            `SELECT u.*, cond.nombre 'condition', edf.nombre building, edoUnd.nombre estatus, tipUnd.nombre UnitType,
+                (SELECT COUNT(*) FROM unidadresidente ur WHERE ur.unidad_Id = u.id) residents
+            FROM unidad u
+                INNER JOIN condicion cond ON cond.id = u.condicion_id
+                INNER JOIN edificio edf ON edf.id = u.edificio_id
+                INNER JOIN estadounidad edoUnd ON edoUnd.id = u.estadounidad_id
+                INNER JOIN tipounidad tipUnd ON tipUnd.id = u.tipounidad_id
+            WHERE u.id = ?`,
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('get unit by id service error: ' + error)
+                    return callBack('get unidad by id service error: ' + error)
                 }
                 return callBack(null, results)
             }
@@ -70,30 +87,37 @@ module.exports = {
     },
     updateRec: (data, callBack) => {
         pool.query(
-            `UPDATE unit 
-                SET companyId = ?
-                    , name = ?
+            `UPDATE unidad 
+                SET identificacion = ?
+                    , piso = ?
                     , alicuota = ?
-                    , unitTypeId = ?
-                    , unitConditionId = ?
-                    , updatedAt = UTC_TIMESTAMP
-                    , updatedUserId = ? 
-                    , boughtDate = ?
+                    , fechaultimoestado = ?
+                    , fechaultimopropietario = ?
+                    , totalrecibo = ?
+                    , totalpago = ? 
+                    , tipounidad_id = ?
+                    , estadounidad_id = ?
+                    , edificio_id = ?
+                    , condicion_id = ?
                 WHERE id = ?;
             `,
             [
-                data.companyId,
-                data.name,
-                data.alicuota,
-                data.unitTypeId,
-                data.unitConditionId,
-                data.userId,
-                data.boughtDate,
+                data.identification,
+                data.floor,
+                data.percent,
+                data.lastStateDate,
+                data.lastCopropertyDate,
+                data.totalCosts,
+                data.totalPays,
+                data.typeId,
+                data.stateId,
+                data.buildingId,
+                data.conditionId,
                 data.id
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('update unit service error: ' + error)
+                    return callBack('update unidad service error: ' + error)
                 }
                 return callBack(null, results)
             }
@@ -101,21 +125,54 @@ module.exports = {
     },
     updateStatusRec: (data, callBack) => {
         pool.query(
-            `UPDATE unit 
-                SET statusId = ?
-                    ,lastStatusDate = UTC_TIMESTAMP
-                    , updatedAt = UTC_TIMESTAMP
-                    , updatedUserId = ? 
+            `UPDATE unidad 
+                SET estadounidad_id = ?
+                    ,fechaultimoestado = UTC_TIMESTAMP
                 WHERE id = ?;
             `,
             [
                 data.statusId,
-                data.userId,
                 data.id
             ],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('update unit status service error: ' + error)
+                    return callBack('update unidad status service error: ' + error)
+                }
+                return callBack(null, results)
+            }
+        );
+    },
+    updateTotalBillRec: (data, callBack) => {
+        pool.query(
+            `UPDATE unidad 
+                SET totalrecibo = ?
+                WHERE id = ?;
+            `,
+            [
+                data.totalBill,
+                data.id
+            ],
+            (error, results, fields) => {
+                if (error) {
+                    return callBack('update total bill service error: ' + error)
+                }
+                return callBack(null, results)
+            }
+        );
+    },
+    updateTotalPayRec: (data, callBack) => {
+        pool.query(
+            `UPDATE unidad 
+                SET totalpago = ?
+                WHERE id = ?;
+            `,
+            [
+                data.totalPay,
+                data.id
+            ],
+            (error, results, fields) => {
+                if (error) {
+                    return callBack('update total pay service error: ' + error)
                 }
                 return callBack(null, results)
             }
@@ -123,11 +180,11 @@ module.exports = {
     },
     deleteRec: (id, callBack) => {
         pool.query(
-            `DELETE FROM unit WHERE id = ?`,
+            `DELETE FROM unidad WHERE id = ?`,
             [id],
             (error, results, fields) => {
                 if (error) {
-                    return callBack('delete unit service error: ' + error)
+                    return callBack('delete unidad service error: ' + error)
                 }
                 return callBack(null, results)
             }

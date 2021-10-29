@@ -1,9 +1,25 @@
-const { create, getById, updateRec, deleteRec, setUnit, deleteUnitRec } = require("./resident.service");
+const { create, getAll, getById, updateRec, deleteRec } = require("./building.service");
 
 module.exports = {
     createReg: (req, res) => {
         const body = req.body;
         create(body, (err, results) => {
+            if (err) {
+                return res.status(500).json({
+                    success: 0,
+                    message: "Database connection error",
+                    error: err
+                });
+            }
+
+            return res.status(200).json({
+                success: 1,
+                data: results
+            });
+        });
+    },
+    getAllReg: (req, res) => {
+        getAll((err, results) => {
             if (err) {
                 return res.status(500).json({
                     success: 0,
@@ -34,23 +50,6 @@ module.exports = {
             return res.status(200).json({
                 success: 1,
                 data: results
-            });
-        });
-    },
-    setUnitReg: (req, res) => {
-        const body = req.body;
-        setUnit(body, (err, results) => {
-            if (err) {
-                console.log('service error: ' + err);
-                return res.status(500).json({
-                    success: 0,
-                    message: "Database connection error",
-                    error: err
-                });
-            }
-            return res.status(200).json({
-                success: 1,
-                message: 'Registro actualizado satisfactoriamente'
             });
         });
     },
@@ -93,22 +92,5 @@ module.exports = {
                 message: "Registro eliminado satisfactoriamente"
             });
         });
-    },
-    deleteUnitReg: (req, res) => {
-        const params = req.params;
-        deleteUnitRec(params, (err, results) => {
-            if (err) {
-                console.log('service error: ' + err);
-                return res.status(500).json({
-                    success: 0,
-                    message: "Database connection error - deleteUnitReg",
-                    error: err
-                });
-            }
-            return res.status(200).json({
-                success: 1,
-                message: 'Registro actualizado satisfactoriamente'
-            });
-        });
-    },
+    }
 };

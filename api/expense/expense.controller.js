@@ -1,11 +1,9 @@
-const { create,
+const { create, 
     getAll, 
     getById, 
     updateRec, 
-    deleteRec, 
-    getResidences,
-    getAdmins
-} = require("./company.service");
+    deleteRec 
+} = require("./expense.service");
 
 module.exports = {
     createReg: (req, res) => {
@@ -30,8 +28,7 @@ module.exports = {
             if (err) {
                 return res.status(500).json({
                     success: 0,
-                    message: "Database connection error",
-                    error: err
+                    message: "Database connection error"
                 });
             }
 
@@ -67,8 +64,7 @@ module.exports = {
                 console.log('service error: ' + err);
                 return res.status(500).json({
                     success: 0,
-                    message: "Database connection error",
-                    error: err
+                    message: "Database connection error"
                 });
             }
             return res.status(200).json({
@@ -84,8 +80,7 @@ module.exports = {
                 console.log('service error: ' + err);
                 return res.status(500).json({
                     success: 0,
-                    message: "Database connection error",
-                    error: err
+                    message: "Database connection error"
                 });
             }
             if (!results) {
@@ -96,41 +91,8 @@ module.exports = {
             }
             return res.status(200).json({
                 success: 1,
-                message: "Registro eliminado correctamente"
+                message: "Registro eliminado satisfactoriamente"
             });
         });
-    },
-    getResidencesReg: (req, res) => {
-        getResidences((err, results) => {
-            if (err) {
-                return res.status(500).json({
-                    success: 0,
-                    message: "Database connection error",
-                    error: err
-                });
-            }
-
-            return res.status(200).json({
-                success: 1,
-                data: results
-            });
-        });
-    },
-    getAdminsReg: (req, res) => {
-        getAdmins((err, results) => {
-            if (err) {
-                return res.status(500).json({
-                    success: 0,
-                    message: "Database connection error",
-                    error: err
-                });
-            }
-
-            return res.status(200).json({
-                success: 1,
-                data: results
-            });
-        });
-    },
-
+    }
 };
