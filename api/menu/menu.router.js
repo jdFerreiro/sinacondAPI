@@ -3,7 +3,7 @@ const
         menuUserReg,
         deleteMenuReg, 
         menuRolReg, 
-        addReg
+        addReg,
     } = require("./menu.controller");
 
 const router = require("express").Router();

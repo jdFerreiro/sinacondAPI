@@ -147,15 +147,19 @@ module.exports = {
             if (result) {
                 results.password = undefined;
                 const token = jwt.sign({ result: results }, "51n4c0nd83©u3md3c0", {
-                    expiresIn: "1d"
+                    expiresIn: "1h"
                 });
-                const userId = results[0].id;
+                const dataResult = results[0];
 
                 return res.status(200).json({
                     success: 1,
                     message: "login successfull",
-                    userId,
-                    token
+                    userId: dataResult.id,
+                    token,
+                    rolId: dataResult.rol_id,
+                    statusId: dataResult.estadousuario_id,
+                    userName: dataResult.apellidos + ", " + dataResult.nombre,
+                    firstLogin: (dataResult.primeravez) == 1 ? true : false
                 });
             }
             else {

@@ -9,7 +9,7 @@ module.exports = {
                 if (err) {
                     res.json({
                         success: 0,
-                        message: "token inválido"
+                        message: "El usuario es inválido o su sesión ha expirado"
                     });
                 } else {
                     next();
