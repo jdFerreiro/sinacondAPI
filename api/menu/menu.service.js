@@ -51,8 +51,9 @@ module.exports = {
                 childs.imageroot childImageRoot
             FROM modulo m
                 LEFT JOIN modulo_rol rm on rm.modulo_id = m.id
-                LEFT JOIN (SELECT * FROM modulo) childs ON childs.modulo_id = m.id
+                LEFT JOIN (SELECT * FROM modulo child WHERE child.activo = 1) childs ON childs.modulo_id = m.id
             WHERE IFNULL(m.modulo_id, 0) = 0 
+                AND m.activo = 1
                 AND rm.rol_id = ?
             ORDER BY m.id;`, 
             [id],
@@ -78,11 +79,30 @@ module.exports = {
                         "childs": []
                     };
 
+                    if (results[0].childId) 
+                    {
+                        console.log(results[0]);
+
+                        var childObj = {
+                            "id": results[0].childId,
+                            "name": results[0].childName,
+                            "title": results[0].childTitle,
+                            "description": results[0].childDescription,
+                            "path": results[0].childController + '/' + results[0].childAction,
+                            "active": (results[0].childIsActive == 1) ? true : false,
+                            "materializeIconName": results[0].childImageRoot
+                        };
+
+                        childsMenu.push(childObj);
+                    }
+
+
                     for (var i = 1; i < results.length; i++) {
                         // cambió el módulo
                         if (results[i].moduleId != parentId) {
                             menuObj.childs = childsMenu;
                             menu.push(menuObj);
+                            childsMenu = [];
 
                             var menuObj = { 
                                 "id": results[i].moduleId,
@@ -96,8 +116,21 @@ module.exports = {
                                 "childs": []
                             };
 
-                            childsMenu = [];
-                            var parentId = results[i].moduleId;;
+                            if (results[i].childId) 
+                            {
+                                var childObj = {
+                                    "id": results[i].childId,
+                                    "name": results[i].childName,
+                                    "title": results[i].childTitle,
+                                    "description": results[i].childDescription,
+                                    "path": results[i].childController + '/' + results[i].childAction,
+                                    "active": (results[i].childIsActive == 1) ? true : false,
+                                    "materializeIconName": results[i].childImageRoot
+                                };
+        
+                                childsMenu.push(childObj);
+                            }
+                                    var parentId = results[i].moduleId;;
                         }
                         else {
                             // procesar hijos
